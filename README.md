@@ -43,20 +43,6 @@ cd skills
 
 Editing a `SKILL.md` in this repo is reflected immediately in the linked skills directories — no reinstall needed. `git pull` is enough to update.
 
-## Uninstall
-
-```bash
-rm ~/.claude/skills/btav-pr-description
-rm ~/.claude/skills/btav-hunk-walkthrough
-rm ~/.claude/skills/btav-code-review
-
-rm "${CODEX_HOME:-$HOME/.codex}/skills/btav-pr-description"
-rm "${CODEX_HOME:-$HOME/.codex}/skills/btav-hunk-walkthrough"
-rm "${CODEX_HOME:-$HOME/.codex}/skills/btav-code-review"
-```
-
-Removing a symlink does not touch the source in this repo.
-
 ## Adding a new skill
 
 1. Create `skills/<your-skill-name>/SKILL.md` with frontmatter (`name`, `description`).
