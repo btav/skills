@@ -1,0 +1,7 @@
+interface:
+  display_name: "BTAV Code Review"
+  short_description: "Review diffs with concise comments"
+  default_prompt: "Use $btav-code-review to review the current diff with concise Conventional Comments."
+
+policy:
+  allow_implicit_invocation: false

@@ -5,7 +5,7 @@ description: Draft a PR body using a fixed three-section template — Descriptio
 
 # PR description (simple)
 
-Invoked explicitly via `/btav-pr-description`. Do not auto-fire on adjacent phrasings.
+Invoked explicitly via `/btav-pr-description` in Claude or `$btav-pr-description` in Codex. Do not auto-fire on adjacent phrasings.
 
 Three fixed sections. Brief. Semantic. Stop.
 

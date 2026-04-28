@@ -1,0 +1,7 @@
+interface:
+  display_name: "BTAV PR Description"
+  short_description: "Draft concise PR descriptions"
+  default_prompt: "Use $btav-pr-description to draft a concise GitHub PR body from the current diff."
+
+policy:
+  allow_implicit_invocation: false

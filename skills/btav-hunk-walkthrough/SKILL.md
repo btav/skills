@@ -5,7 +5,7 @@ description: Walk a diff hunk-by-hunk with a one-sentence behavior recap per hun
 
 # Hunk walkthrough
 
-Invoked explicitly via `/btav-hunk-walkthrough`. Do not auto-fire on adjacent phrasings.
+Invoked explicitly via `/btav-hunk-walkthrough` in Claude or `$btav-hunk-walkthrough` in Codex. Do not auto-fire on adjacent phrasings.
 
 Walk the diff hunk-by-hunk. Show, then explain in one breath. Flag a lens only when it sharpens the read.
 
