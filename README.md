@@ -1,6 +1,6 @@
-# claude-skills
+# skills
 
-brian's Claude and Codex skills
+brian's skills directory for reusable AI coding workflows
 
 ## What's in here
 
@@ -15,15 +15,17 @@ All are **explicit-invocation only** — they do not auto-fire on adjacent phras
 ## Install
 
 ```bash
-git clone <repo>
-cd claude-skills
+git clone <repo> skills
+cd skills
 ./install.sh
 ```
 
 ### What `install.sh` does
 
-- Creates `~/.claude/skills/` and `${CODEX_HOME:-$HOME/.codex}/skills/` if missing.
-- For each directory under `./skills/`, creates symlinks at each enabled target:
+- Creates the selected skills directories if missing:
+  - `~/.claude/skills/`
+  - `${CODEX_HOME:-$HOME/.codex}/skills/`
+- For each directory under `./skills/`, creates symlinks in each selected skills directory:
   - `~/.claude/skills/<name>` → the absolute path of the source in this repo.
   - `${CODEX_HOME:-$HOME/.codex}/skills/<name>` → the absolute path of the source in this repo.
 - Idempotent: re-running prints `ok` for already-linked skills and skips them.
@@ -39,7 +41,7 @@ cd claude-skills
 
 ### Why symlinks
 
-Editing a `SKILL.md` in this repo is reflected immediately in the linked Claude and Codex skill directories — no reinstall needed. `git pull` is enough to update.
+Editing a `SKILL.md` in this repo is reflected immediately in the linked skills directories — no reinstall needed. `git pull` is enough to update.
 
 ## Uninstall
 
@@ -59,4 +61,4 @@ Removing a symlink does not touch the source in this repo.
 
 1. Create `skills/<your-skill-name>/SKILL.md` with frontmatter (`name`, `description`).
 2. For Codex UI metadata, add `skills/<your-skill-name>/agents/openai.yaml`.
-3. Run `./install.sh` again — it picks up the new directory and links it into both targets.
+3. Run `./install.sh` again — it picks up the new directory and links it into each selected skills directory.
