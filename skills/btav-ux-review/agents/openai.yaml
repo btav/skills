@@ -1,0 +1,7 @@
+interface:
+  display_name: "BTAV UX Review"
+  short_description: "Review UI with Laws of UX"
+  default_prompt: "Use $btav-ux-review to review this UI using the Laws of UX."
+
+policy:
+  allow_implicit_invocation: false
