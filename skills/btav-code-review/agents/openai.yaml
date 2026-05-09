@@ -1,5 +1,5 @@
 interface:
-  display_name: "BTAV Code Review"
+  display_name: "btav code review"
   short_description: "Review diffs with concise comments"
   default_prompt: "Use $btav-code-review to review the current diff with concise Conventional Comments."
 

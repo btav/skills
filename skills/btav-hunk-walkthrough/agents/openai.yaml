@@ -1,5 +1,5 @@
 interface:
-  display_name: "BTAV Hunk Walkthrough"
+  display_name: "btav hunk walkthrough"
   short_description: "Walk diffs hunk by hunk clearly"
   default_prompt: "Use $btav-hunk-walkthrough to walk the current diff hunk by hunk with concise behavior notes."
 
