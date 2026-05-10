@@ -1,14 +1,8 @@
 # skills
 
-brian's reusable AI coding workflows. Works on Claude (`/skill-name`), Codex (`$skill-name`), and Gemini (`/skill-name`).
+btav's reusable AI coding workflows.
 
-## Skills
-
-- `btav-pr-description` — Draft a PR body using Description / Why / Changes with Conventional-Commits prefixes per file.
-- `btav-hunk-walkthrough` — Walk a diff hunk-by-hunk with a one-sentence recap and optional lens note.
-- `btav-code-review` — Short, code-heavy review using Conventional Comments prefixes with a verdict line.
-
-All are explicit-invocation only — they don't auto-fire on adjacent phrasings.
+Works on Claude (`/skill-name`), Codex (`$skill-name`), and Gemini (`/skill-name`).
 
 ## Install
 
@@ -19,3 +13,11 @@ cd skills
 ```
 
 Flags: `--target claude|codex|gemini|all` (default `all`), `--force`, `--dry-run`, `-h`.
+
+## Skills
+
+- `btav-pr-description` — Draft a PR body
+- `btav-hunk-walkthrough` — Walk a diff hunk-by-hunk
+- `btav-code-review` — Short, code-heavy review
+
+All are explicit-invocation only — they don't auto-fire on adjacent phrasings.
