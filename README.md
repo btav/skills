@@ -1,16 +1,14 @@
 # skills
 
-brian's skills directory for reusable AI coding workflows
+brian's reusable AI coding workflows. Works on Claude (`/skill-name`), Codex (`$skill-name`), and Gemini (`/skill-name`).
 
-## What's in here
+## Skills
 
-| Skill | Claude | Codex | What it does |
-|---|---|---|---|
-| `btav-pr-description` | `/btav-pr-description` | `$btav-pr-description` | Draft a PR body using a fixed three-section template — Description / Why / Changes — with Conventional-Commits prefixes per file. |
-| `btav-hunk-walkthrough` | `/btav-hunk-walkthrough` | `$btav-hunk-walkthrough` | Walk a diff hunk-by-hunk with a one-sentence behavior recap per hunk and an optional lens note (YAGNI / DRY / Hyrum / Demeter / premature opt / broken windows). |
-| `btav-code-review` | `/btav-code-review` | `$btav-code-review` | Short, code-heavy review of a diff / branch / PR using Conventional Comments prefixes (issue / suggestion / question / nitpick / praise) with a final verdict line. |
+- `btav-pr-description` — Draft a PR body using Description / Why / Changes with Conventional-Commits prefixes per file.
+- `btav-hunk-walkthrough` — Walk a diff hunk-by-hunk with a one-sentence recap and optional lens note.
+- `btav-code-review` — Short, code-heavy review using Conventional Comments prefixes with a verdict line.
 
-All are **explicit-invocation only** — they do not auto-fire on adjacent phrasings. Type the slash command in Claude or the `$skill-name` command in Codex.
+All are explicit-invocation only — they don't auto-fire on adjacent phrasings.
 
 ## Install
 
@@ -20,31 +18,4 @@ cd skills
 ./install.sh
 ```
 
-### What `install.sh` does
-
-- Creates the selected skills directories if missing:
-  - `~/.claude/skills/`
-  - `${CODEX_HOME:-$HOME/.codex}/skills/`
-- For each directory under `./skills/`, creates symlinks in each selected skills directory:
-  - `~/.claude/skills/<name>` → the absolute path of the source in this repo.
-  - `${CODEX_HOME:-$HOME/.codex}/skills/<name>` → the absolute path of the source in this repo.
-- Idempotent: re-running prints `ok` for already-linked skills and skips them.
-- Replaces *symlinks* that point elsewhere automatically (`relink`).
-- Refuses to overwrite *real* files/dirs at the destination unless `--force` is passed.
-
-### Flags
-
-- `--target claude|codex|all` — choose where to install. Defaults to `all`.
-- `--force` — back up a real file or dir at the destination to `<name>.bak.<timestamp>` before linking.
-- `--dry-run` — print actions prefixed `DRY:` without executing them.
-- `-h` / `--help` — print usage and exit.
-
-### Why symlinks
-
-Editing a `SKILL.md` in this repo is reflected immediately in the linked skills directories — no reinstall needed. `git pull` is enough to update.
-
-## Adding a new skill
-
-1. Create `skills/<your-skill-name>/SKILL.md` with frontmatter (`name`, `description`).
-2. For Codex UI metadata, add `skills/<your-skill-name>/agents/openai.yaml`.
-3. Run `./install.sh` again — it picks up the new directory and links it into each selected skills directory.
+Flags: `--target claude|codex|gemini|all` (default `all`), `--force`, `--dry-run`, `-h`.
