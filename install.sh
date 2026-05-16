@@ -77,7 +77,8 @@ run() {
 
 install_gemini_target() {
   local count=0
-  local src src_abs name build_dir package_script gemini_root npm_root
+  local src src_abs name build_dir package_script
+  local gemini_bin gemini_real gemini_root link_target
 
   echo "==> gemini (packaging and installing)"
 
@@ -86,18 +87,28 @@ install_gemini_target() {
     exit 1
   fi
 
-  # Attempt to locate package_skill.cjs
-  if command -v npm &>/dev/null; then
-    npm_root=$(npm root -g 2>/dev/null) || npm_root=""
-  else
-    npm_root=""
+  # Derive the @google/gemini-cli package dir from the `gemini` binary itself,
+  # not from `npm root -g`. Multiple npms on PATH (brew, nvm, /usr/local) make
+  # `npm root -g` return whichever was hit first, which may not be the npm
+  # that owns gemini-cli.
+  gemini_bin=$(command -v gemini 2>/dev/null || true)
+  gemini_root=""
+  if [ -n "$gemini_bin" ]; then
+    gemini_real="$gemini_bin"
+    # Portable symlink walk (BSD readlink has no -f).
+    while [ -L "$gemini_real" ]; do
+      link_target=$(readlink "$gemini_real")
+      case "$link_target" in
+        /*) gemini_real="$link_target" ;;
+        *)  gemini_real="$(cd "$(dirname "$gemini_real")" && pwd)/$link_target" ;;
+      esac
+    done
+    # gemini_real -> <package>/bundle/gemini.js, so the package root is two dirs up.
+    gemini_root=$(cd "$(dirname "$gemini_real")/.." 2>/dev/null && pwd) || gemini_root=""
   fi
+  # Fallback for dry-run when gemini isn't installed yet.
+  [ -z "$gemini_root" ] && gemini_root="/usr/local/lib/node_modules/@google/gemini-cli"
 
-  if [ -n "$npm_root" ]; then
-    gemini_root="$npm_root/@google/gemini-cli"
-  else
-    gemini_root="/usr/local/lib/node_modules/@google/gemini-cli"
-  fi
   package_script="$gemini_root/bundle/builtin/skill-creator/scripts/package_skill.cjs"
 
   if [ "$dry_run" -ne 1 ] && [ ! -f "$package_script" ]; then
@@ -116,7 +127,6 @@ install_gemini_target() {
     [ -d "$src" ] || continue
     src_abs="${src%/}"
     name=$(basename "$src_abs")
-    echo "packaging $name..."
 
     build_dir="$temp_root/$name"
     run mkdir -p "$build_dir"
@@ -129,10 +139,18 @@ install_gemini_target() {
 
     if [ "$dry_run" -eq 1 ]; then
       echo "DRY: node $package_script $build_dir $temp_root"
-      echo "DRY: gemini skills install $temp_root/$name.skill --scope user"
+      echo "DRY: gemini skills install $temp_root/$name.skill --scope user --consent"
     else
-      node "$package_script" "$build_dir" "$temp_root" > /dev/null
-      gemini skills install "$temp_root/$name.skill" --scope user
+      # Capture stdout+stderr; only emit them on failure so success is quiet.
+      if ! out=$(node "$package_script" "$build_dir" "$temp_root" 2>&1); then
+        echo "$out" >&2
+        exit 1
+      fi
+      if ! out=$(gemini skills install "$temp_root/$name.skill" --scope user --consent 2>&1); then
+        echo "$out" >&2
+        exit 1
+      fi
+      echo "ok    $name"
     fi
 
     count=$((count + 1))
