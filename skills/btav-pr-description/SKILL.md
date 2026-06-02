@@ -1,11 +1,12 @@
 ---
 name: btav-pr-description
 description: Draft a PR body using a fixed three-section template — Description / Why / Changes — with Conventional-Commits prefixes per file.
+disable-model-invocation: true
 ---
 
 # PR description (simple)
 
-Invoked explicitly via `/btav-pr-description` in Claude or `$btav-pr-description` in Codex. Do not auto-fire on adjacent phrasings.
+Invoked explicitly via `/btav-pr-description` in Claude, `$btav-pr-description` in Codex, or `/skill:btav-pr-description` in Pi. Do not auto-fire on adjacent phrasings.
 
 Three fixed sections. Brief. Semantic. Stop.
 
