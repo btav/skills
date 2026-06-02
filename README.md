@@ -2,7 +2,7 @@
 
 btav's reusable AI coding workflows.
 
-Works on Claude (`/skill-name`), Codex (`$skill-name`), and Gemini (`/skill-name`).
+Works on Claude (`/skill-name`), Codex (`$skill-name`), Gemini (`/skill-name`), and Pi (`/skill:skill-name`).
 
 ## Install
 
@@ -12,7 +12,7 @@ cd skills
 ./install.sh
 ```
 
-Flags: `--target claude|codex|gemini|all` (default `all`), `--force`, `--dry-run`, `-h`.
+Flags: `--target claude|codex|gemini|pi|all` (default `all`), `--force`, `--dry-run`, `-h`.
 
 ## Skills
 

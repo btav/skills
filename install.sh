@@ -7,12 +7,12 @@ target=all
 
 usage() {
   cat <<EOF
-Usage: ./install.sh [--target claude|codex|gemini|all] [--force] [--dry-run]
+Usage: ./install.sh [--target claude|codex|gemini|pi|all] [--force] [--dry-run]
 
-Symlinks every directory under ./skills/ into Claude and/or Codex skills dirs,
+Symlinks every directory under ./skills/ into Claude, Codex, and/or Pi skills dirs,
 or packages and installs them for Gemini.
 
-  --target   Install target: claude, codex, gemini, or all. Defaults to all.
+  --target   Install target: claude, codex, gemini, pi, or all. Defaults to all.
   --force    Back up real files/dirs at the destination (to .bak.<timestamp>)
              before linking. Existing symlinks are always replaced.
   --dry-run  Print actions without executing them.
@@ -25,7 +25,7 @@ while [ "$#" -gt 0 ]; do
     --dry-run) dry_run=1 ;;
     --target)
       if [ "$#" -lt 2 ]; then
-        echo "--target requires one of: claude, codex, gemini, or all" >&2
+        echo "--target requires one of: claude, codex, gemini, pi, or all" >&2
         exit 2
       fi
       target="$2"
@@ -42,9 +42,9 @@ while [ "$#" -gt 0 ]; do
 done
 
 case "$target" in
-  gemini|claude|codex|all) ;;
+  gemini|claude|codex|pi|all) ;;
   *)
-    echo "invalid --target: $target (expected claude, codex, gemini, or all)" >&2
+    echo "invalid --target: $target (expected claude, codex, gemini, pi, or all)" >&2
     exit 2
     ;;
 esac
@@ -53,6 +53,7 @@ repo_root=$(cd "$(dirname "$0")" && pwd)
 src_dir="$repo_root/skills"
 claude_dst_dir="$HOME/.claude/skills"
 codex_dst_dir="${CODEX_HOME:-$HOME/.codex}/skills"
+pi_dst_dir="$HOME/.pi/agent/skills"
 temp_root=""
 
 cleanup() {
@@ -213,6 +214,9 @@ case "$target" in
   codex)
     install_target "codex" "$codex_dst_dir"
     ;;
+  pi)
+    install_target "pi" "$pi_dst_dir"
+    ;;
   all)
     if [ "$dry_run" -eq 1 ] || command -v gemini &>/dev/null; then
       install_gemini_target
@@ -221,5 +225,6 @@ case "$target" in
     fi
     install_target "claude" "$claude_dst_dir"
     install_target "codex" "$codex_dst_dir"
+    install_target "pi" "$pi_dst_dir"
     ;;
 esac

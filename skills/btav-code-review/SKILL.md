@@ -1,11 +1,12 @@
 ---
 name: btav-code-review
 description: Short, code-heavy review of a diff / branch / PR using Conventional Comments prefixes (issue / suggestion / question / nitpick / praise) with a final verdict line.
+disable-model-invocation: true
 ---
 
 # Code review (simple)
 
-Invoked explicitly via `/btav-code-review` in Claude or `$btav-code-review` in Codex. Do not auto-fire on adjacent phrasings.
+Invoked explicitly via `/btav-code-review` in Claude, `$btav-code-review` in Codex, or `/skill:btav-code-review` in Pi. Do not auto-fire on adjacent phrasings.
 
 Short, code-heavy reviews. Show the change, don't describe it. Approve generously.
 
