@@ -1,0 +1,7 @@
+interface:
+  display_name: "btav commit message"
+  short_description: "Draft short Conventional Commit messages"
+  default_prompt: "Use $btav-commit-message to draft a concise Conventional Commit message from the current changes."
+
+policy:
+  allow_implicit_invocation: false
