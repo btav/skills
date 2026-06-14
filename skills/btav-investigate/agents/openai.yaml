@@ -1,0 +1,7 @@
+interface:
+  display_name: "btav investigate"
+  short_description: "Trace a symptom to ranked root-cause hypotheses"
+  default_prompt: "Use $btav-investigate to trace the symptom and produce a structured root-cause analysis."
+
+policy:
+  allow_implicit_invocation: false
