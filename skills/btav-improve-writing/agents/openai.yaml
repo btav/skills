@@ -1,0 +1,7 @@
+interface:
+  display_name: "btav improve writing"
+  short_description: "Rewrite prose to be simpler, preserve tone, and remove AI tells"
+  default_prompt: "Use $btav-improve-writing to rewrite the pasted prose, preserving tone and scrubbing AI writing tropes."
+
+policy:
+  allow_implicit_invocation: false
