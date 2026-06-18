@@ -16,8 +16,11 @@ Flags: `--target claude|codex|gemini|pi|all` (default `all`), `--force`, `--dry-
 
 ## Skills
 
+- `btav-commit-message` — Draft a short Conventional Commit subject
 - `btav-pr-description` — Draft a PR body
 - `btav-hunk-walkthrough` — Walk a diff hunk-by-hunk
 - `btav-code-review` — Short, code-heavy review
+- `btav-investigate` — Root-cause analysis with ranked hypotheses and evidence
+- `btav-improve-writing` — Rewrite prose to be simpler, preserve tone, and remove AI tells
 
 All are explicit-invocation only — they don't auto-fire on adjacent phrasings.
