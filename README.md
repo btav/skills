@@ -22,5 +22,6 @@ Flags: `--target claude|codex|gemini|pi|all` (default `all`), `--force`, `--dry-
 - `btav-code-review` — Short, code-heavy review
 - `btav-investigate` — Root-cause analysis with ranked hypotheses and evidence
 - `btav-improve-writing` — Rewrite prose to be simpler, preserve tone, and remove AI tells
+- `btav-review-loop` — Review, fix, and re-review until clean
 
 All are explicit-invocation only — they don't auto-fire on adjacent phrasings.
