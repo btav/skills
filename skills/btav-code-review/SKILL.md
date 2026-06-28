@@ -33,6 +33,7 @@ In rough priority order:
 - **Security** — injection, auth bypass, unsafe deserialization, secrets in code.
 - **Project conventions** — read `CLAUDE.md` (root and any in modified directories) and call out clear violations. Don't invent conventions the project doesn't actually have.
 - **Clarity** — only when a small change makes the code obviously easier to read. Bias toward leaving working code alone.
+- **Obvious over-engineering introduced by this diff** — only when a smaller replacement is locally provable. Prefer `suggestion:` unless the extra complexity causes a real bug, regression, or convention violation.
 - **Reachability check** — before flagging a logic bug, follow at least one call path to confirm the bad input is actually reachable. If reaching the bug requires conditions you can't verify from the diff and surrounding files, downgrade to `question:` rather than `issue:`.
 
 **Severity calibration.** Bugs in production data paths are blocking. Bugs in dev-only paths (debug channels, source maps, error reporters, dev-mode logging) are usually `issue (non-blocking):` unless they corrupt user data or mask security issues. Bugs in tests, fixtures, and tooling are usually `suggestion:`.
@@ -54,6 +55,7 @@ A lens is a way of looking at the diff. It can sharpen a `why:` line, but it nev
 - Pre-existing code outside the diff. (Exception: if the diff *touches* a line and the surrounding context reveals a serious bug introduced by these changes, flag it.)
 - Missing tests or docs unless the project explicitly requires them.
 - Stylistic preferences not grounded in a real readability or correctness gain.
+- Over-engineering hunts that turn the review into a cleanup pass. Cap simplification comments to one or two high-signal items unless the complexity causes a correctness problem.
 - Changes that are clearly intentional and on-purpose for the PR's goal, even if you'd have done them differently.
 
 If you're not sure whether something is real, drop it. False positives are worse than missed nits.

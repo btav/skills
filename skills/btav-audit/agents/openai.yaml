@@ -1,0 +1,7 @@
+interface:
+  display_name: "btav audit"
+  short_description: "Whole-repo over-engineering scan"
+  default_prompt: "Use $btav-audit to scan the whole repository for over-engineering and rank what to delete."
+
+policy:
+  allow_implicit_invocation: false
