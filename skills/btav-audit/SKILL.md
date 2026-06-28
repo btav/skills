@@ -1,6 +1,6 @@
 ---
 name: btav-audit
-description: Whole-repo audit for over-engineering. Like btav-simplify but scans the entire codebase instead of a diff — a ranked list of what to delete, simplify, or replace with stdlib/native equivalents. One-shot report, applies nothing.
+description: Whole-repo audit for over-engineering. Scans the entire codebase rather than a single diff and returns a ranked list of what to delete, simplify, or replace with stdlib/native equivalents. One-shot report, applies nothing.
 disable-model-invocation: true
 ---
 
@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Invoked explicitly via `/btav-audit` in Claude, `$btav-audit` in Codex, or `/skill:btav-audit` in Pi. Do not auto-fire on adjacent phrasings.
 
-`btav-simplify`, repo-wide. Use `/btav-simplify` for a diff; use this for the whole tree. Scan the codebase and rank findings biggest cut first.
+Whole-tree over-engineering pass. Use `/btav-code-review` for normal diff review; use this for repository-wide deletion and simplification opportunities. Scan the codebase and rank findings biggest cut first.
 
 ## What to scan
 
