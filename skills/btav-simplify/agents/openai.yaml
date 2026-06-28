@@ -1,0 +1,7 @@
+interface:
+  display_name: "btav simplify"
+  short_description: "Find what to delete in a diff"
+  default_prompt: "Use $btav-simplify to review the current diff for over-engineering and list what to delete."
+
+policy:
+  allow_implicit_invocation: false

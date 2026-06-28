@@ -1,0 +1,7 @@
+interface:
+  display_name: "btav debt"
+  short_description: "Ledger of deferred shortcuts"
+  default_prompt: "Use $btav-debt to harvest btav: shortcut comments into a debt ledger."
+
+policy:
+  allow_implicit_invocation: false
