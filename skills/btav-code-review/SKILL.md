@@ -1,6 +1,6 @@
 ---
 name: btav-code-review
-description: Short, code-heavy review of a diff / branch / PR using Conventional Comments prefixes (issue / suggestion / question / nitpick / praise) with a final verdict line.
+description: Short, code-heavy review of a diff / branch / PR using Conventional Comments prefixes (issue / suggestion / question / nitpick / praise) with a final verdict line. Pass `adversarial` to switch from a lenient stance to a bug hunt that requires a concrete failure scenario per issue.
 disable-model-invocation: true
 ---
 
@@ -12,9 +12,9 @@ Short, code-heavy reviews. Show the change, don't describe it. Approve generousl
 
 ## What to review
 
-Pick the source of changes in this order, unless the user specifies otherwise:
-
 Before reading the diff, read the PR title and description (or the user's framing if it's a local diff). Authorial intent — what the PR claims to do — is what lets you distinguish intentional from accidental changes. Skim mechanical churn (cache-key bumps, lockfiles, regenerated snapshots) once and don't re-flag it.
+
+Pick the source of changes in this order, unless the user specifies otherwise:
 
 1. **A specific PR** if the user named one (`gh pr diff <N>` to fetch).
 2. **Current branch vs the default branch** if you're inside a git repo on a feature branch (`git diff $(git merge-base HEAD origin/main 2>/dev/null || git merge-base HEAD main)..HEAD`).
@@ -30,6 +30,7 @@ In rough priority order:
 
 - **Bugs** — wrong logic, off-by-one, broken control flow, race conditions, null/undefined that will be dereferenced, wrong API endpoints, leaked credentials, data-loss risks.
 - **Regressions** — behavior changes that look unintentional given the diff's stated purpose.
+- **Test integrity** — tests deleted, skipped, or assertions loosened. Weakening a test is not a test bug — it's a masked regression until proven otherwise: `issue (blocking):` when unexplained, `question:` when the PR description plausibly accounts for it.
 - **Security** — injection, auth bypass, unsafe deserialization, secrets in code.
 - **Project conventions** — read `CLAUDE.md` (root and any in modified directories) and call out clear violations. Don't invent conventions the project doesn't actually have.
 - **Clarity** — only when a small change makes the code obviously easier to read. Bias toward leaving working code alone.
@@ -59,6 +60,15 @@ A lens is a way of looking at the diff. It can sharpen a `why:` line, but it nev
 - Changes that are clearly intentional and on-purpose for the PR's goal, even if you'd have done them differently.
 
 If you're not sure whether something is real, drop it. False positives are worse than missed nits.
+
+## Adversarial mode
+
+Active only when invoked with the `adversarial` argument (`/btav-code-review adversarial`). Everything above still applies except the stance:
+
+- Assume the diff contains at least one real bug and hunt for it. Trace edge inputs, error paths, boundary conditions, concurrency, and changed contracts until you find it or exhaust the plausible failure modes. "Approve generously" is suspended — approve only what survived the hunt.
+- The precision bar goes *up*, not down: every `issue:` must carry a `why:` line stating a concrete failure scenario — a specific input or state that produces the wrong behavior, traceable in the code. A hunting stance without this rule invents bugs to satisfy itself; the failure scenario is what keeps the hunt honest.
+- Can't construct the failure scenario? Downgrade to `question:` or drop it.
+- Output format, prefixes, and verdict rules are unchanged. A clean diff still gets `Verdict: approve — no issues found.` — finding nothing after a real hunt is a valid outcome, not a failure.
 
 ## Output format
 

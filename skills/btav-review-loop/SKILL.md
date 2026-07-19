@@ -1,6 +1,6 @@
 ---
 name: btav-review-loop
-description: Run a bounded review-and-fix loop over a diff / branch / PR. Repeatedly launch fresh code-review passes with `btav-code-review`, fix concrete findings locally, and stop after two consecutive clean fresh reviews or an explicit loop stop condition.
+description: Run a bounded review-and-fix loop over a diff / branch / PR. Repeatedly launch fresh code-review passes with `btav-code-review`, fix concrete findings locally, and stop after two consecutive clean fresh reviews (the second a pair of parallel adversarial reviews) or an explicit loop stop condition.
 disable-model-invocation: true
 ---
 
@@ -87,7 +87,7 @@ Verdict: approve — no issues found.
 
 that is a clean pass.
 
-If only `question:` items remain, stop and show them to the user instead of guessing.
+A review whose only findings are `question:` / `nitpick:` / `praise:` is still a clean pass, except when a `question:` is about deleted, skipped, or loosened tests; treat those as unresolved instead of clean. Never guess at fixes for `question:` items — carry them to the final summary for the user. Stop early when an actionable fix depends on the answer to an unanswered `question:`, or when an unanswered test-weakening `question:` remains.
 
 ### 3. Verify before fixing
 
@@ -118,6 +118,8 @@ Prefer:
 
 Don't create speculative cleanups unrelated to the finding.
 
+Never resolve a finding or a failing behavior by deleting a test, skipping it (`.skip`, `xit`, commenting it out), or loosening its assertions. Updating a test's expectation is allowed when your verification shows the old expectation was wrong — and say so explicitly in the loop output.
+
 ### 5. Re-review
 
 After fixing, launch a new fresh reviewer pass against the updated diff.
@@ -132,23 +134,39 @@ Track consecutive clean passes:
 - actionable findings found: reset clean-pass count to `0`
 - clean pass: increment clean-pass count by `1`
 - initialize total-pass count to `0` before the first review
-- every fresh reviewer output, including the initial review, increments total-pass count by `1`
+- every fresh review pass, including the initial review, increments total-pass count by `1` (the confirmation pair below counts as one pass)
 
-If a pass is clean and `clean-pass count` is `1`, immediately launch one more fresh reviewer pass without making edits.
+If a pass is clean and `clean-pass count` is `1`, immediately launch the confirmation pass without making edits, unless this was the terminal pass-8 adversarial pair described under Budget extensions: **two** fresh reviewer subagents **in parallel**, each instructed to invoke `btav-code-review` with the `adversarial` argument, each in its own context. Neither sees the other's output, and the don't-leak rule applies to both. A second plain pass mostly re-samples the same lenient review; two independent adversarial samples catch different bugs, so a clean exit means the change survived two independent hostile looks, not two friendly ones.
+
+Confirmation-pass bookkeeping:
+
+- the pair counts as **one** pass toward the total-pass count
+- the pass is clean only if **both** reviewers return clean
+- union the actionable findings from both reviewers and merge duplicates before the verify-before-fixing step
+- any actionable finding from either reviewer resets the clean-pass count, same as any other actionable finding
+- close both reviewer subagents after consuming their results
+
+Budget extensions:
+
+- the normal review budget is **6** passes
+- if pass 6 is the first clean pass, allow the adversarial confirmation pair as pass 7
+- if that pass-7 confirmation returns actionable findings and you fix them, immediately launch one final adversarial confirmation pair as pass 8, even though `clean-pass count` was reset to `0`
+- the pass-8 adversarial pair is terminal and does not trigger another confirmation pair
 
 Stop when either:
 
 - clean-pass count reaches `2`
-- total-pass count reaches `6`
+- total-pass count reaches `6`, unless one of the Budget extensions above is still pending
 
 ## Stop conditions
 
 Stop the loop when any of these is true:
 
-- two consecutive fresh review passes are clean
-- total review passes reach `6`
+- two consecutive fresh review passes are clean (the second a pair of parallel adversarial reviews, both clean)
+- total review passes reach `6`, unless one of the Budget extensions above is still pending
 - a single degraded review/fix pass has completed
-- only `question:` findings remain
+- an actionable fix depends on an unanswered `question:`
+- an unanswered `question:` remains about deleted, skipped, or loosened tests
 - the remaining findings can't be verified from the code with reasonable confidence
 - the same finding survives two fix attempts without a clear next move
 
@@ -185,4 +203,5 @@ At the end:
 - Don't trust a single review pass as final proof.
 - Don't use stale findings after the code has changed; re-review from fresh context.
 - Don't keep looping on praise or subjective stylistic comments.
-- Don't run builds, linters, typecheckers, or tests unless the user explicitly asks.
+- Don't let the loop go green by weakening tests. A clean pass earned by deleting, skipping, or loosening a test is not a clean pass.
+- Don't run builds, linters, typecheckers, or tests unless the user explicitly asks. One exception: if you added or updated a test in step 4, run just that test — never leave behind a test you haven't seen pass.
