@@ -14,13 +14,13 @@ Walk the diff hunk-by-hunk. Show, then explain in one breath. Flag a lens only w
 
 Pick the source of changes in this order, unless the user specifies otherwise:
 
-Before reading the diff, read the PR title and description (or the user's framing if it's a local diff). Authorial intent — what the PR claims to do — is what lets you describe each hunk in behavioral terms instead of just narrating the textual edit.
-
-1. **A specific PR** if the user named one (`gh pr diff <N>` to fetch, `gh pr view <N>` for the title/body).
+1. **A specific PR** if the user named one (`gh pr diff <N>` for the diff, `gh pr view <N>` for the title/body).
 2. **Current branch vs the default branch** if you're inside a git repo on a feature branch (`git diff $(git merge-base HEAD origin/main 2>/dev/null || git merge-base HEAD main)..HEAD`).
 3. **Uncommitted working changes** otherwise (`git diff HEAD`).
 
 If you're unsure which the user meant, ask in one short sentence before walking.
+
+Before reading the diff, read the PR title and description (or the user's framing if it's a local diff). Authorial intent — what the PR claims to do — is what lets you describe each hunk in behavioral terms instead of just narrating the textual edit.
 
 Read the changed files (not just the hunks) when surrounding context matters for explaining a hunk's behavior — e.g. when a hunk's effect depends on an unchanged caller, type, or schema. You don't need the whole repo, just enough to describe the hunk in behavioral terms.
 

@@ -1,0 +1,7 @@
+interface:
+  display_name: "btav mode"
+  short_description: "Session mode that routes tasks to the matching btav skill"
+  default_prompt: "Use $btav-mode with the task in this same prompt so it can route that task and apply the working principles and house style."
+
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,7 @@
+interface:
+  display_name: "btav how"
+  short_description: "Explain how a subsystem works, anchored to file:line"
+  default_prompt: "Use $btav-how to walk through how the named feature or subsystem works, with every claim anchored to file:line references."
+
+policy:
+  allow_implicit_invocation: false
