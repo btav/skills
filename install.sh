@@ -71,16 +71,10 @@ install_target() {
   local label="$1"
   local dst_dir="$2"
   local count=0
-  local src name src_abs dst current backup retired
+  local src name src_abs dst current backup
 
   echo "==> $label ($dst_dir)"
   run mkdir -p "$dst_dir"
-
-  retired="$dst_dir/btav-audit"
-  if [ -L "$retired" ] && [ "$(readlink "$retired")" = "$src_dir/btav-audit" ]; then
-    echo "unlink btav-audit (retired)"
-    run unlink "$retired"
-  fi
 
   for src in "$src_dir"/*/; do
     [ -d "$src" ] || continue
