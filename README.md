@@ -2,7 +2,7 @@
 
 btav's reusable AI coding workflows.
 
-Works on Claude (`/skill-name`), Codex (`$skill-name`), Gemini (`/skill-name`), and Pi (`/skill:skill-name`).
+Works on Claude (`/skill-name`), Codex (`$skill-name`), and Pi (`/skill:skill-name`).
 
 ## Install
 
@@ -12,7 +12,7 @@ cd skills
 ./install.sh
 ```
 
-Flags: `--target claude|codex|gemini|pi|all` (default `all`), `--force`, `--dry-run`, `-h`.
+Flags: `--target claude|codex|pi|all` (default `all`), `--force`, `--dry-run`, `-h`.
 
 ## Skills
 
@@ -23,6 +23,9 @@ Flags: `--target claude|codex|gemini|pi|all` (default `all`), `--force`, `--dry-
 - `btav-investigate` — Root-cause analysis with ranked hypotheses and evidence
 - `btav-improve-writing` — Rewrite prose to be simpler, preserve tone, and remove AI tells
 - `btav-review-loop` — Review, fix, and re-review until clean
-- `btav-audit` — Whole-repo over-engineering scan, ranked biggest cut first
+- `btav-how` — Explain how a subsystem works, anchored to `file:line`
+- `btav-why` — Dig up why code is the way it is from git and PR history
+- `btav-blast-radius` — Map what a change could break beyond the diff
+- `btav-mode` — Session mode that routes tasks to the matching skill above
 
-All are explicit-invocation only — they don't auto-fire on adjacent phrasings.
+All are explicit-invocation only — they don't auto-fire on adjacent phrasings, `btav-mode` included. But once `btav-mode` is active, it routes a matching task to the right skill without you naming it.

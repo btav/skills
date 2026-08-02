@@ -1,0 +1,7 @@
+interface:
+  display_name: "btav why"
+  short_description: "Dig up why code is the way it is from git and PR history"
+  default_prompt: "Use $btav-why to reconstruct the recorded rationale behind the named code from git history, PRs, and issues, keeping known reasons separate from inference."
+
+policy:
+  allow_implicit_invocation: false

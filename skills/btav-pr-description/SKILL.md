@@ -14,7 +14,7 @@ Three fixed sections. Brief. Semantic. Stop.
 
 Pick the source of changes in this order, unless the user specifies otherwise:
 
-1. **A specific PR** if the user named one (`gh pr diff <N>` for the diff, `gh pr view <N>` for any existing title/body).
+1. **A specific PR** if the user named one (`gh pr diff <N>` for the diff, `gh pr view <N>` for the title/body).
 2. **Current branch vs the default branch** if you're inside a git repo on a feature branch (`git diff $(git merge-base HEAD origin/main 2>/dev/null || git merge-base HEAD main)..HEAD`, plus `git log` over the same range for commit messages — they often state the *why*).
 3. **Uncommitted working changes** otherwise (`git diff HEAD`).
 
@@ -82,6 +82,7 @@ Pick exactly one — the dominant intent of that file's change:
 ## Style rules
 
 - **No emojis.** No "Generated with Claude" footer. No preamble ("Here is your PR description:") and no trailing commentary.
+- **Prose pass.** Before printing, read `btav-improve-writing/SKILL.md` from the same skills directory this skill was loaded from (`~/.claude/skills/btav-improve-writing/SKILL.md` in Claude, `${CODEX_HOME:-$HOME/.codex}/skills/btav-improve-writing/SKILL.md` in Codex, `~/.pi/agent/skills/btav-improve-writing/SKILL.md` in Pi), then scrub the Description and Why sentences against its trope catalog. If the skill isn't available, skip the pass — never block the draft on it.
 - Print the three sections and stop.
 - Don't run the build, typechecker, linter, or tests.
 - Don't post to GitHub. Don't run `gh pr edit` or `gh pr create` unless the user explicitly asks.

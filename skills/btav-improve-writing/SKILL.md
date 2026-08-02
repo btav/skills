@@ -1,6 +1,6 @@
 ---
 name: btav-improve-writing
-description: Improve pasted prose while preserving tone — keep it simple, restructure only when required, and scrub AI writing tropes. Use only when explicitly invoked via /btav-improve-writing in Claude or $btav-improve-writing in Codex.
+description: Improve pasted prose while preserving tone. Keep it simple, restructure only when required, and scrub AI writing tropes. Use only when explicitly invoked.
 disable-model-invocation: true
 ---
 
@@ -14,6 +14,8 @@ Rewrite the user's text to be simpler and cleaner without changing voice.
 
 The user pastes one or more passages of prose to improve. The text may be a paragraph, an email, a Slack message, a doc, a README — anything written in prose.
 
+When another btav skill activates this one as a prose reference, apply only the `## AI writing tropes to avoid` catalog, then return control to that skill. No other section in this skill applies; the calling skill's rules control its output.
+
 If no prose is supplied with the invocation, ask one short question — "Paste the text you want improved." — and stop. Do not invent text to edit, and do not grab a previous message in the conversation as the input.
 
 ## How to improve
@@ -26,6 +28,7 @@ Apply these rules in order:
 4. **Scrub AI writing tropes.** Apply the catalog in `## AI writing tropes to avoid` below to every sentence.
 5. **Don't add content.** No new claims, facts, examples, or arguments. Editing only.
 6. **Don't AI-ify.** Don't introduce headings, bullet lists, em dashes, or markdown formatting the original didn't have.
+7. **Keep the rhythm human.** Vary sentence length; uniform structure and a one-thought-per-sentence cadence are themselves tells. Never add opinions, claims, or first-person voice the original didn't have.
 
 ## Output format
 
@@ -78,7 +81,7 @@ Overuse of "quietly" and similar adverbs to convey subtle importance or understa
 
 #### "Delve" and Friends
 
-Used to be the most infamous AI tell. "Delve" went from an uncommon English word to appearing in a staggering percentage of AI-generated text. Part of a family of overused AI vocabulary including "certainly", "utilize", "leverage" (as a verb), "robust", "streamline", and "harness".
+Used to be the most infamous AI tell. "Delve" went from an uncommon English word to appearing in a staggering percentage of AI-generated text. Part of a family of overused AI vocabulary including "certainly", "utilize", "leverage" (as a verb), "robust", "streamline", "harness", "crucial", "additionally", "enhance", "foster", "garner", "intricate", "interplay", "underscore", and "showcase".
 
 **Avoid patterns like:**
 - "Let's delve into the details..."
@@ -102,6 +105,42 @@ Replacing simple "is" or "are" with pompous alternatives like "serves as", "stan
 - "The building serves as a reminder of the city's heritage."
 - "Gallery 825 serves as LAAA's exhibition space for contemporary art."
 - "The station marks a pivotal moment in the evolution of regional transit."
+
+#### Puffery
+
+Significance inflation and promotional gloss. AI dresses mundane facts in importance ("pivotal moment", "testament to", "setting the stage for", "indelible mark") or brochure language ("vibrant", "breathtaking", "renowned", "nestled", "must-visit"). Cut the puffery and state what happened.
+
+**Avoid patterns like:**
+- "a testament to the team's enduring commitment to excellence"
+- "a pivotal moment in the company's journey"
+- "nestled in the heart of a vibrant tech ecosystem"
+
+#### Abstract Metaphor Nouns
+
+Metaphor nouns that sound technical but have a plainer concrete word: "substrate", "wedge", "vector", "nexus", "locus", "bedrock", "primitive" (as a noun), "scaffolding" and "harness" (as metaphors), "modality". "Substrate" is "base", "vector" is "way", "wedge in" is "add". Pick the concrete word.
+
+**Avoid patterns like:**
+- "the substrate on which modern agents are built"
+- "a wedge into the enterprise workflow nexus"
+- "positioning documentation as a growth vector"
+
+#### Synonym Cycling
+
+Rotating through synonyms to avoid repeating a word. Humans repeat the natural term; the model's repetition penalty swaps in stilted alternatives. Pick one word and stick with it.
+
+**Avoid patterns like:**
+- "the function... the method... the routine... the procedure" for the same thing
+- "users, end-users, individuals, folks" cycling within one paragraph
+- "the protagonist... the main character... the central figure... the hero"
+
+#### Filler Phrases and Overhedging
+
+Wordy constructions that add length, not meaning: "in order to" for "to", "due to the fact that" for "because", "it is important to note that" for nothing. Includes hedge stacks -- "could potentially possibly be argued that it might" collapses to "may".
+
+**Avoid patterns like:**
+- "In order to facilitate the process of onboarding..."
+- "Due to the fact that the API is rate-limited..."
+- "It could potentially be argued that this approach might have drawbacks."
 
 ### Sentence Structure
 
@@ -176,6 +215,24 @@ Using "from X to Y" constructions where X and Y aren't on any real scale. In leg
 - "From innovation to implementation to cultural transformation."
 - "From the singularity of the Big Bang to the grand cosmic web."
 - "From problem-solving and tool-making to scientific discovery, artistic expression, and technological innovation."
+
+#### Colon as Connector
+
+Colons are fine before a list or an example. As a mid-sentence connector splicing framing onto a point, the colon is a crutch -- the sentence should stand without it. Rewrite so the point carries itself.
+
+**Avoid patterns like:**
+- "If you're coming from traditional automation: instead of registering handlers, you describe conditions."
+- "If you're coming from React: think of it as a component."
+- "Here's the shift: agents don't wait for events."
+
+#### Passive Voice Padding
+
+Reflexive passive constructions that hide the actor. Passive is fine when the actor is unknown or genuinely doesn't matter; the tell is passivity everywhere. Name the actor: "queries are validated" becomes "the compiler validates queries".
+
+**Avoid patterns like:**
+- "The file is parsed by the loader and the schema is checked."
+- "Mistakes were made during the migration."
+- "It has been observed that latency increases under load."
 
 ### Paragraph Structure
 

@@ -14,13 +14,13 @@ Short, code-heavy reviews. Show the change, don't describe it. Approve generousl
 
 Pick the source of changes in this order, unless the user specifies otherwise:
 
-Before reading the diff, read the PR title and description (or the user's framing if it's a local diff). Authorial intent — what the PR claims to do — is what lets you distinguish intentional from accidental changes. Skim mechanical churn (cache-key bumps, lockfiles, regenerated snapshots) once and don't re-flag it.
-
-1. **A specific PR** if the user named one (`gh pr diff <N>` to fetch).
+1. **A specific PR** if the user named one (`gh pr diff <N>` for the diff, `gh pr view <N>` for the title/body).
 2. **Current branch vs the default branch** if you're inside a git repo on a feature branch (`git diff $(git merge-base HEAD origin/main 2>/dev/null || git merge-base HEAD main)..HEAD`).
 3. **Uncommitted working changes** otherwise (`git diff HEAD`).
 
 If you're unsure which the user meant, ask in one short sentence before reviewing.
+
+Before reading the diff, read the PR title and description (or the user's framing if it's a local diff). Authorial intent — what the PR claims to do — is what lets you distinguish intentional from accidental changes. Skim mechanical churn (cache-key bumps, lockfiles, regenerated snapshots) once and don't re-flag it.
 
 Read the changed files (not just the hunks) when surrounding context matters for judging an issue. You don't need the whole repo — just enough to be sure a flagged issue is real. If the diff forks or mirrors an existing implementation (parallel bundler configs, host-config variants, sibling adapters), spot-check the canonical version before flagging anything as a "novel" bug or convention violation. Patterns shared with established code are not novel — flag the *delta*, not the inherited shape.
 
