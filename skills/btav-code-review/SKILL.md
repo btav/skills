@@ -31,7 +31,7 @@ In rough priority order:
 - **Bugs** — wrong logic, off-by-one, broken control flow, race conditions, null/undefined that will be dereferenced, wrong API endpoints, leaked credentials, data-loss risks.
 - **Regressions** — behavior changes that look unintentional given the diff's stated purpose.
 - **Security** — injection, auth bypass, unsafe deserialization, secrets in code.
-- **Project conventions** — read `CLAUDE.md` (root and any in modified directories) and call out clear violations. Don't invent conventions the project doesn't actually have.
+- **Project conventions** — read applicable `AGENTS.md` and `CLAUDE.md` files (root and any in modified directories) and call out clear violations. Don't invent conventions the project doesn't actually have.
 - **Clarity** — only when a small change makes the code obviously easier to read. Bias toward leaving working code alone.
 - **Obvious over-engineering introduced by this diff** — only when a smaller replacement is locally provable. Prefer `suggestion:` unless the extra complexity causes a real bug, regression, or convention violation.
 - **Reachability check** — before flagging a logic bug, follow at least one call path to confirm the bad input is actually reachable. If reaching the bug requires conditions you can't verify from the diff and surrounding files, downgrade to `question:` rather than `issue:`.

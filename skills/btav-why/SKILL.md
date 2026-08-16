@@ -10,7 +10,7 @@ Invoked explicitly via `/btav-why` in Claude, `$btav-why` in Codex, or `/skill:b
 
 Dig up the recorded reasons. Cite everything. Keep known separate from guessed. Stop.
 
-Use `/btav-investigate` when something is *broken*; use this when something is *surprising* — the code works, but you want to know why it's shaped this way.
+Use `btav-investigate` when something is *broken*; use this when something is *surprising* — the code works, but you want to know why it's shaped this way.
 
 ## Input
 

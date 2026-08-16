@@ -119,5 +119,5 @@ Evidence against / unknown:
 
 ## Suggested next steps
 - Check prod error logs for the exact exception at `db/client.ts:55` to confirm it's the `.toFixed` TypeError.
-- If confirmed, decide whether to fix in `config.ts` (parse to int) or `prod.env` (remove the `s` suffix). Either works.
+- Confirm the pg client's documented `timeout` contract: whether it accepts a string with a unit suffix or requires milliseconds as a number.
 ````
