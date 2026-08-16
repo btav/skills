@@ -10,7 +10,7 @@ Invoked explicitly via `/btav-blast-radius` in Claude, `$btav-blast-radius` in C
 
 Trace the diff outward. Rank what could break. Say how sure you are. Stop.
 
-Use `/btav-code-review` to judge the diff itself; use this to find what the diff can break *elsewhere* — the consumers and contracts the review doesn't look at.
+Use `btav-code-review` to judge the diff itself; use this to find what the diff can break *elsewhere* — the consumers and contracts the review doesn't look at.
 
 ## What to analyze
 
@@ -70,7 +70,7 @@ Running the code would raise confidence further, but that's out of scope here �
 
 ## What NOT to do
 
-- Don't review the diff itself — no verdicts, no `issue:`/`suggestion:` comments. That's `/btav-code-review`.
+- Don't review the diff itself — no verdicts, no `issue:`/`suggestion:` comments. That's `btav-code-review`.
 - Don't flag risks internal to the diff (a bug in the new code is a review finding, not blast radius).
 - Don't propose fixes. The output is a map, not a patch.
 - Don't run the build, typechecker, linter, or tests. Reading and reasoning only.

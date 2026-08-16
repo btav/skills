@@ -10,7 +10,7 @@ Invoked explicitly via `/btav-how` in Claude, `$btav-how` in Codex, or `/skill:b
 
 Find the entrypoints. Trace the main flow. Explain with `file:line` receipts. Stop.
 
-Use `/btav-why` for the history behind a design; use this for how the code behaves today.
+Use `btav-why` for the history behind a design; use this for how the code behaves today.
 
 ## Input
 
@@ -58,7 +58,7 @@ If the named subsystem doesn't exist in the repo, say so in one line and stop.
 
 ## What NOT to do
 
-- Don't review. No verdicts, no suggestions, no `issue:` comments — route those to `/btav-code-review`.
+- Don't review. No verdicts, no suggestions, no `issue:` comments — route those to `btav-code-review`.
 - Don't propose changes or fixes, even for gotchas. Describe; the reader decides.
 - Don't run the code, build, or tests. Reading only.
 - Don't explain language or framework basics — the reader is a developer. Explain *this repo's* wiring.

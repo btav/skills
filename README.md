@@ -28,4 +28,14 @@ Flags: `--target claude|codex|pi|all` (default `all`), `--force`, `--dry-run`, `
 - `btav-blast-radius` — Map what a change could break beyond the diff
 - `btav-mode` — Session mode that routes tasks to the matching skill above
 
-All are explicit-invocation only — they don't auto-fire on adjacent phrasings, `btav-mode` included. But once `btav-mode` is active, it routes a matching task to the right skill without you naming it.
+All are explicit-invocation only — they don't auto-fire on adjacent phrasings, `btav-mode` included.
+
+## `btav-mode`
+
+Pass the task with the invocation so the mode can route it in the same turn:
+
+- Claude: `/btav-mode <task>`
+- Codex: `$btav-mode <task>`
+- Pi: `/skill:btav-mode <task>`
+
+For repo-wide behavior, load `btav-mode` through the repository's `AGENTS.md` or equivalent global instructions. Only rely on a bare invocation persisting across later turns when the runtime supports it.
