@@ -91,7 +91,7 @@ Output:
 ````
 ## Change surface
 - `src/api/users.ts:41` — `getUser()` now returns `null` on a missing user instead of throwing `NotFoundError`.
-- `src/config.ts:12` — config key renamed `DB_TIMEOUT` → `DATABASE_TIMEOUT_MS`.
+- `src/config.ts:12` — config key renamed `DB_TIMEOUT` to `DATABASE_TIMEOUT_MS`.
 
 ## Risks
 
