@@ -1,12 +1,12 @@
 ---
-name: btav-hunk-walkthrough
+name: btav-diff
 description: Walk a diff hunk-by-hunk with a one-sentence behavior recap per hunk and an optional lens note (YAGNI / DRY / Hyrum / Demeter / premature opt / broken windows).
 disable-model-invocation: true
 ---
 
 # Hunk walkthrough
 
-Invoked explicitly via `/btav-hunk-walkthrough` in Claude, `$btav-hunk-walkthrough` in Codex, or `/skill:btav-hunk-walkthrough` in Pi. Do not auto-fire on adjacent phrasings.
+Invoked explicitly via `/btav-diff` in Claude, `$btav-diff` in Codex, or `/skill:btav-diff` in Pi. Do not auto-fire on adjacent phrasings.
 
 Walk the diff hunk-by-hunk. Show, then explain in one breath. Flag a lens only when it sharpens the read.
 

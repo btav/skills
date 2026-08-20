@@ -1,80 +1,42 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-force=0
-dry_run=0
-target=all
+# shellcheck source=lib.sh
+source "$(cd "$(dirname "$0")" && pwd)/lib.sh"
 
 usage() {
   cat <<EOF
-Usage: ./install.sh [--target claude|codex|pi|all] [--force] [--dry-run]
+Usage: ./install.sh [--target claude|codex|pi|all] [--force] [--no-prune] [--dry-run]
 
 Symlinks every directory under ./skills/ into Claude, Codex, and/or Pi skills dirs.
 
-  --target   Install target: claude, codex, pi, or all. Defaults to all.
-  --force    Back up real files/dirs at the destination (to .bak.<timestamp>)
-             before linking. Existing symlinks are always replaced.
-  --dry-run  Print actions without executing them.
+  --target    Install target: claude, codex, pi, or all. Defaults to all.
+  --force     Back up real files/dirs at the destination (to .bak.<timestamp>)
+              before linking. Existing symlinks are always replaced.
+  --no-prune  Keep stale links. By default, install first removes broken links
+              and btav-* links whose skill is no longer in ./skills/, so renamed
+              and deleted skills clean themselves up.
+  --dry-run   Print actions without executing them.
 EOF
 }
 
-while [ "$#" -gt 0 ]; do
-  case "$1" in
-    --force) force=1 ;;
-    --dry-run) dry_run=1 ;;
-    --target)
-      if [ "$#" -lt 2 ]; then
-        echo "--target requires one of: claude, codex, pi, or all" >&2
-        exit 2
-      fi
-      target="$2"
-      shift
-      ;;
-    --target=*) target="${1#--target=}" ;;
-    -h|--help)
-      usage
-      exit 0
-      ;;
-    *) echo "unknown arg: $1" >&2; exit 2 ;;
-  esac
-  shift
-done
-
-case "$target" in
-  claude|codex|pi|all) ;;
-  *)
-    echo "invalid --target: $target (expected claude, codex, pi, or all)" >&2
-    exit 2
-    ;;
-esac
-
-repo_root=$(cd "$(dirname "$0")" && pwd)
-src_dir="$repo_root/skills"
-claude_dst_dir="$HOME/.claude/skills"
-codex_dst_dir="${CODEX_HOME:-$HOME/.codex}/skills"
-pi_dst_dir="$HOME/.pi/agent/skills"
-
-if [ ! -d "$src_dir" ]; then
-  echo "no skills/ directory at $src_dir" >&2
-  exit 1
-fi
-
-run() {
-  if [ "$dry_run" -eq 1 ]; then
-    echo "DRY: $*"
-  else
-    "$@"
-  fi
-}
+parse_args usage "$@"
+require_src_dir
 
 install_target() {
   local label="$1"
   local dst_dir="$2"
   local count=0
+  local pruned=0
   local src name src_abs dst current backup
 
   echo "==> $label ($dst_dir)"
   run mkdir -p "$dst_dir"
+
+  if [ "$prune" -eq 1 ]; then
+    sweep_target "$dst_dir" prune
+    pruned=$swept
+  fi
 
   for src in "$src_dir"/*/; do
     [ -d "$src" ] || continue
@@ -85,7 +47,7 @@ install_target() {
     if [ -L "$dst" ]; then
       current=$(readlink "$dst")
       if [ "$current" = "$src_abs" ]; then
-        echo "ok    $name (already linked)"
+        echo "ok     $name (already linked)"
         count=$((count + 1))
         continue
       fi
@@ -98,32 +60,21 @@ install_target() {
         run mv "$dst" "$backup"
         run ln -s "$src_abs" "$dst"
       else
-        echo "skip  $name (real file/dir at $dst; rerun with --force to back up)"
+        echo "skip   $name (real file/dir at $dst; rerun with --force to back up)"
         continue
       fi
     else
-      echo "link  $name"
+      echo "link   $name"
       run ln -s "$src_abs" "$dst"
     fi
     count=$((count + 1))
   done
 
-  echo "Installed $count skills into $dst_dir"
+  if [ "$pruned" -gt 0 ]; then
+    echo "Pruned $pruned, installed $count skills into $dst_dir"
+  else
+    echo "Installed $count skills into $dst_dir"
+  fi
 }
 
-case "$target" in
-  claude)
-    install_target "claude" "$claude_dst_dir"
-    ;;
-  codex)
-    install_target "codex" "$codex_dst_dir"
-    ;;
-  pi)
-    install_target "pi" "$pi_dst_dir"
-    ;;
-  all)
-    install_target "claude" "$claude_dst_dir"
-    install_target "codex" "$codex_dst_dir"
-    install_target "pi" "$pi_dst_dir"
-    ;;
-esac
+for_each_target install_target

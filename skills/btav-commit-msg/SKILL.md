@@ -1,12 +1,12 @@
 ---
-name: btav-commit-message
+name: btav-commit-msg
 description: Generate one short Conventional Commit subject from the current changes. Use only when explicitly invoked.
 disable-model-invocation: true
 ---
 
 # Commit message (short)
 
-Invoked explicitly via `/btav-commit-message` in Claude, `$btav-commit-message` in Codex, or `/skill:btav-commit-message` in Pi. Do not auto-fire on adjacent phrasings.
+Invoked explicitly via `/btav-commit-msg` in Claude, `$btav-commit-msg` in Codex, or `/skill:btav-commit-msg` in Pi. Do not auto-fire on adjacent phrasings.
 
 Generate one concise Conventional Commit subject and stop.
 

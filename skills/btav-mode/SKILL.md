@@ -16,16 +16,16 @@ When a task matches a row, apply the named skill instead of improvising the same
 
 | The task is to… | Apply |
 |---|---|
-| Review a diff, branch, or PR | `btav-code-review` |
+| Review a diff, branch, or PR | `btav-review` |
 | Review and fix repeatedly until clean | `btav-review-loop` |
-| Walk through a diff hunk-by-hunk | `btav-hunk-walkthrough` |
+| Walk through a diff hunk-by-hunk | `btav-diff` |
 | Diagnose, without fixing, an error, failing test, or unexpected behavior | `btav-investigate` |
 | Explain how a feature or subsystem works | `btav-how` |
 | Explain why code is designed the way it is | `btav-why` |
-| Assess what a change could break beyond the diff | `btav-blast-radius` |
-| Write a commit message | `btav-commit-message` |
-| Draft a PR body | `btav-pr-description` |
-| Improve pasted prose | `btav-improve-writing` |
+| Assess what a change could break beyond the diff | `btav-blast` |
+| Write a commit message | `btav-commit-msg` |
+| Draft a PR body | `btav-pr-body` |
+| Improve pasted prose | `btav-unslop` |
 
 Routing rules:
 
@@ -55,7 +55,7 @@ Apply these while working. Name one only when it actually changed a decision —
 
 ## Prose
 
-Prose artifacts written for humans — PR bodies and docs — get scrubbed against the `btav-improve-writing` trope catalog: read its `SKILL.md` from the sibling skills directory, then apply the `## AI writing tropes to avoid` section. Ordinary conversation and work summaries do not trigger this pass. If the skill isn't available, skip the scrub — never block the work on it.
+Prose artifacts written for humans — PR bodies and docs — get scrubbed against the `btav-unslop` trope catalog: read its `SKILL.md` from the sibling skills directory, then apply the `## AI writing tropes to avoid` section. Ordinary conversation and work summaries do not trigger this pass. If the skill isn't available, skip the scrub — never block the work on it.
 
 ## Style rules
 
