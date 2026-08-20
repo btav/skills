@@ -1,12 +1,12 @@
 ---
-name: btav-improve-writing
+name: btav-unslop
 description: Improve pasted prose while preserving tone. Keep it simple, restructure only when required, and scrub AI writing tropes. Use only when explicitly invoked.
 disable-model-invocation: true
 ---
 
 # Improve writing
 
-Invoked explicitly via `/btav-improve-writing` in Claude, `$btav-improve-writing` in Codex, or `/skill:btav-improve-writing` in Pi. Do not auto-fire on adjacent phrasings.
+Invoked explicitly via `/btav-unslop` in Claude, `$btav-unslop` in Codex, or `/skill:btav-unslop` in Pi. Do not auto-fire on adjacent phrasings.
 
 Rewrite the user's text to be simpler and cleaner without changing voice.
 

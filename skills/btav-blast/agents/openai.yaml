@@ -1,0 +1,7 @@
+interface:
+  display_name: "btav blast"
+  short_description: "Map what a change could break beyond the diff"
+  default_prompt: "Use $btav-blast to map what the current change could break beyond the diff, ranked by risk with honest evidence levels."
+
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,7 @@
+interface:
+  display_name: "btav diff"
+  short_description: "Walk diffs hunk by hunk clearly"
+  default_prompt: "Use $btav-diff to walk the current diff hunk by hunk with concise behavior notes."
+
+policy:
+  allow_implicit_invocation: false

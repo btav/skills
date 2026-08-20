@@ -1,6 +1,6 @@
 ---
 name: btav-review-loop
-description: Run a bounded review-and-fix loop over a diff / branch / PR. Repeatedly launch fresh code-review passes with `btav-code-review`, fix concrete findings locally, and stop after two consecutive clean fresh reviews or an explicit loop stop condition.
+description: Run a bounded review-and-fix loop over a diff / branch / PR. Repeatedly launch fresh code-review passes with `btav-review`, fix concrete findings locally, and stop after two consecutive clean fresh reviews or an explicit loop stop condition.
 disable-model-invocation: true
 ---
 
@@ -44,12 +44,12 @@ Use fresh review passes. Don't trust your own prior review text as proof that th
 
 ### 1. Launch a fresh reviewer
 
-When subagents are available, start a fresh subagent and have it use `btav-code-review` on the current change set.
+When subagents are available, start a fresh subagent and have it use `btav-review` on the current change set.
 
 Prompt shape:
 
 ```text
-Use the `btav-code-review` skill at <path> to review the full cumulative change set against <review-anchor>. Include both the original changes and all fixes made in this loop. Return only the review.
+Use the `btav-review` skill at <path> to review the full cumulative change set against <review-anchor>. Include both the original changes and all fixes made in this loop. Return only the review.
 ```
 
 Give the subagent the minimum necessary context. Don't leak your suspected bugs, intended fixes, or prior conclusions into the prompt.

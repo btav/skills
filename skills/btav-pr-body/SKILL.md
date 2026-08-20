@@ -1,12 +1,12 @@
 ---
-name: btav-pr-description
+name: btav-pr-body
 description: Draft a PR body using a fixed three-section template — Description / Why / Changes — with Conventional-Commits prefixes per file.
 disable-model-invocation: true
 ---
 
 # PR description (simple)
 
-Invoked explicitly via `/btav-pr-description` in Claude, `$btav-pr-description` in Codex, or `/skill:btav-pr-description` in Pi. Do not auto-fire on adjacent phrasings.
+Invoked explicitly via `/btav-pr-body` in Claude, `$btav-pr-body` in Codex, or `/skill:btav-pr-body` in Pi. Do not auto-fire on adjacent phrasings.
 
 Three fixed sections. Brief. Semantic. Stop.
 
@@ -82,7 +82,7 @@ Pick exactly one — the dominant intent of that file's change:
 ## Style rules
 
 - **No emojis.** No "Generated with Claude" footer. No preamble ("Here is your PR description:") and no trailing commentary.
-- **Prose pass.** Before printing, read `btav-improve-writing/SKILL.md` from the same skills directory this skill was loaded from (`~/.claude/skills/btav-improve-writing/SKILL.md` in Claude, `${CODEX_HOME:-$HOME/.codex}/skills/btav-improve-writing/SKILL.md` in Codex, `~/.pi/agent/skills/btav-improve-writing/SKILL.md` in Pi), then scrub the Description and Why sentences against its trope catalog. If the skill isn't available, skip the pass — never block the draft on it.
+- **Prose pass.** Before printing, read `btav-unslop/SKILL.md` from the same skills directory this skill was loaded from (`~/.claude/skills/btav-unslop/SKILL.md` in Claude, `${CODEX_HOME:-$HOME/.codex}/skills/btav-unslop/SKILL.md` in Codex, `~/.pi/agent/skills/btav-unslop/SKILL.md` in Pi), then scrub the Description and Why sentences against its trope catalog. If the skill isn't available, skip the pass — never block the draft on it.
 - Print the three sections and stop.
 - Don't run the build, typechecker, linter, or tests.
 - Don't post to GitHub. Don't run `gh pr edit` or `gh pr create` unless the user explicitly asks.

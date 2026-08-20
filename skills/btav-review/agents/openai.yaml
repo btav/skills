@@ -1,0 +1,7 @@
+interface:
+  display_name: "btav review"
+  short_description: "Review diffs for bugs and high-signal cleanup"
+  default_prompt: "Use $btav-review to review the current diff with concise Conventional Comments, including only high-signal simplification notes when locally provable."
+
+policy:
+  allow_implicit_invocation: false

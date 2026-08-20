@@ -1,0 +1,7 @@
+interface:
+  display_name: "btav unslop"
+  short_description: "Rewrite prose to be simpler, preserve tone, and remove AI tells"
+  default_prompt: "Use $btav-unslop to rewrite the pasted prose, preserving tone and scrubbing AI writing tropes."
+
+policy:
+  allow_implicit_invocation: false

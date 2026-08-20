@@ -1,16 +1,16 @@
 ---
-name: btav-blast-radius
+name: btav-blast
 description: Map what a change could break beyond the diff. Affected callers, contracts, and behaviors ranked by risk, each with an honest evidence level. Analysis only, applies nothing. Use only when explicitly invoked.
 disable-model-invocation: true
 ---
 
 # Blast radius
 
-Invoked explicitly via `/btav-blast-radius` in Claude, `$btav-blast-radius` in Codex, or `/skill:btav-blast-radius` in Pi. Do not auto-fire on adjacent phrasings.
+Invoked explicitly via `/btav-blast` in Claude, `$btav-blast` in Codex, or `/skill:btav-blast` in Pi. Do not auto-fire on adjacent phrasings.
 
 Trace the diff outward. Rank what could break. Say how sure you are. Stop.
 
-Use `btav-code-review` to judge the diff itself; use this to find what the diff can break *elsewhere* — the consumers and contracts the review doesn't look at.
+Use `btav-review` to judge the diff itself; use this to find what the diff can break *elsewhere* — the consumers and contracts the review doesn't look at.
 
 ## What to analyze
 
@@ -70,7 +70,7 @@ Running the code would raise confidence further, but that's out of scope here �
 
 ## What NOT to do
 
-- Don't review the diff itself — no verdicts, no `issue:`/`suggestion:` comments. That's `btav-code-review`.
+- Don't review the diff itself — no verdicts, no `issue:`/`suggestion:` comments. That's `btav-review`.
 - Don't flag risks internal to the diff (a bug in the new code is a review finding, not blast radius).
 - Don't propose fixes. The output is a map, not a patch.
 - Don't run the build, typechecker, linter, or tests. Reading and reasoning only.

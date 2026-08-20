@@ -58,7 +58,7 @@ If the named subsystem doesn't exist in the repo, say so in one line and stop.
 
 ## What NOT to do
 
-- Don't review. No verdicts, no suggestions, no `issue:` comments — route those to `btav-code-review`.
+- Don't review. No verdicts, no suggestions, no `issue:` comments — route those to `btav-review`.
 - Don't propose changes or fixes, even for gotchas. Describe; the reader decides.
 - Don't run the code, build, or tests. Reading only.
 - Don't explain language or framework basics — the reader is a developer. Explain *this repo's* wiring.
