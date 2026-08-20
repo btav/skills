@@ -96,7 +96,7 @@ Why does `src/db/client.ts` implement its own retry loop rather than using the p
 
 ## Timeline
 - `9b2d1e4` (2022-11-03, PR #112) — introduced `withRetry()` wrapper around `pool.query`; PR titled "work around pg-pool 3.4 retry bug".
-- `c07aa91` (2023-01-19) — raised max retries 3 → 5, message: "prod incident 2023-01-18, cold-start timeouts".
+- `c07aa91` (2023-01-19) — raised max retries 3 to 5, message: "prod incident 2023-01-18, cold-start timeouts".
 - `f31c880` (2023-08-30, PR #201) — pg-pool upgraded to 3.6; retry wrapper left in place, no discussion of removing it.
 
 ## Known rationale

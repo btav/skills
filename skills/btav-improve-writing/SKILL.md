@@ -29,6 +29,7 @@ Apply these rules in order:
 5. **Don't add content.** No new claims, facts, examples, or arguments. Editing only.
 6. **Don't AI-ify.** Don't introduce headings, bullet lists, em dashes, or markdown formatting the original didn't have.
 7. **Keep the rhythm human.** Vary sentence length; uniform structure and a one-thought-per-sentence cadence are themselves tells. Never add opinions, claims, or first-person voice the original didn't have.
+8. **Self-audit before printing.** Reread the finished rewrite against the catalog and the rules above, and fix only what they name. Run this pass silently; it never appears in the output.
 
 ## Output format
 
@@ -64,9 +65,7 @@ Output **only** the rewritten text. Nothing else.
 
 ## AI writing tropes to avoid
 
-The catalog below is the working list of patterns to scrub from rewrites. Any one of these used once might be fine; the problem is when multiple tropes appear together or when a single trope is used repeatedly. The examples use `--` to represent em dashes so the catalog itself doesn't model the tell.
-
-Source: [tropes.fyi](https://tropes.fyi) by [ossama.is](https://ossama.is).
+The catalog below is the working list of patterns to scrub from rewrites. Any one of these used once might be fine; the problem is when multiple tropes appear together or when a single trope is used repeatedly. The examples use `--` to represent em dashes so the catalog itself doesn't model the tell. The trope headings below are title case because they're names, not prose headings.
 
 ### Word Choice
 
@@ -108,12 +107,14 @@ Replacing simple "is" or "are" with pompous alternatives like "serves as", "stan
 
 #### Puffery
 
-Significance inflation and promotional gloss. AI dresses mundane facts in importance ("pivotal moment", "testament to", "setting the stage for", "indelible mark") or brochure language ("vibrant", "breathtaking", "renowned", "nestled", "must-visit"). Cut the puffery and state what happened.
+Significance inflation and promotional gloss. AI dresses mundane facts in importance ("pivotal moment", "testament to", "setting the stage for", "indelible mark") or brochure language ("vibrant", "breathtaking", "renowned", "nestled", "must-visit"). Two variants belong here. One name-drops outlets, institutions, or customers without saying what any of them actually said; quote one of them if the text supplies a quote, otherwise keep the bare claim and drop the roll-call. The generic conclusion gestures at a bright future in place of a plan; state the specific next step if the text names one, otherwise drop it. Cut the puffery and state what happened.
 
 **Avoid patterns like:**
 - "a testament to the team's enduring commitment to excellence"
 - "a pivotal moment in the company's journey"
 - "nestled in the heart of a vibrant tech ecosystem"
+- "covered by TechCrunch, Wired, and The Verge", with nothing quoted from any of them
+- "The future looks bright for the platform."
 
 #### Abstract Metaphor Nouns
 
@@ -339,7 +340,7 @@ AI clusters invented compound labels that sound analytical without being grounde
 
 #### Em-Dash Addiction
 
-Compulsive overuse of em dashes for dramatic pauses, parenthetical asides and pivot points. A human writer might use 2-3 per piece naturally; AI will use 20+.
+Compulsive overuse of em dashes for dramatic pauses, parenthetical asides and pivot points. A human writer might use 2-3 per piece naturally; AI will use 20+. When you cut one, don't trade it for parentheses or an en dash; that swaps one tell for another. End the sentence or use a comma.
 
 **Avoid patterns like:**
 - "The problem -- and this is the part nobody talks about -- is systemic."
@@ -348,12 +349,17 @@ Compulsive overuse of em dashes for dramatic pauses, parenthetical asides and pi
 
 #### Bold-First Bullets
 
-Every bullet point or list item starts with a bolded phrase or sentence. Extremely common in Claude and ChatGPT markdown output. Almost nobody formats lists this way when writing by hand. It's a telltale sign of AI-generated documentation, blog posts, and README files (especially with emojis).
+Every bullet point or list item starts with a bolded phrase or sentence. Extremely common in Claude and ChatGPT markdown output, and a telltale sign of AI-generated documentation, blog posts, and README files (especially with emojis).
+
+The tell is a bold label that restates the line it introduces, so the label adds nothing the sentence didn't already say. A bold lead-in that names a distinct item and is followed by genuinely new detail is ordinary technical formatting; leave those alone. Density is the other signal: bold on every item of a long list is the pattern even where the individual labels earn their place.
 
 **Avoid patterns like:**
-- "Every single bullet point begins with a bold keyword."
+- "**Performance**: Performance improved by 40%."
 - "**Security**: Environment-based configuration with..."
-- "**Performance**: Lazy loading of expensive resources..."
+- "Every single item in a 20-item list opens with a bold keyword."
+
+Fine as written, not a trope:
+- "**Schema in TypeScript.** Tables live in one file."
 
 #### Unicode Decoration
 
@@ -363,6 +369,14 @@ Use of unicode arrows (->), smart/curly quotes, and other special characters tha
 - "Input → Processing → Output"
 - "This leads to better outcomes → which means higher engagement"
 - "“Smart quotes” instead of straight \"quotes\" that you’d actually type"
+
+#### Title Case Headings
+
+Capitalizing every significant word in a heading. Sentence case is what people type; title case is what a template generator emits. Applies to headings already in the text when the document is otherwise sentence case.
+
+**Avoid patterns like:**
+- "## Getting Started with the New API"
+- "### Key Takeaways and Next Steps"
 
 ### Composition
 
@@ -427,15 +441,54 @@ The rigid formula where AI acknowledges problems only to immediately dismiss the
 - "Despite its industrial and residential prosperity, Korattur faces challenges typical of urban areas."
 - "Despite their promising applications, pyroelectric materials face several challenges that must be addressed for broader adoption."
 
+### Communication Artifacts
+
+#### Chatbot Artifacts
+
+Assistant-voice leftovers that survive the copy-paste out of a chat window. Three kinds: helper sign-offs, knowledge-cutoff disclaimers, and sycophantic openers. All three address a conversational partner who does not exist in the finished document. Delete them. For a cutoff disclaimer, supply the missing fact only when the text already carries it, otherwise cut the sentence; don't leave the hedge standing in for one. Distinct from `#### Filler Phrases and Overhedging`, which covers hedging that isn't addressed to a chat partner.
+
+**Avoid patterns like:**
+- "I hope this helps! Let me know if you'd like me to expand on any of these."
+- "As of my last update, I don't have information on releases after early 2024."
+- "Great question! You're absolutely right to be concerned about this."
+
+### Plain Speech
+
+#### Feeling Words for Mechanism
+
+Sentences that name a feeling the reader is supposed to have instead of naming what the thing does. They read as description because they sound concrete, but they carry no fact, instruction, or number. Ask what the sentence tells the reader to do or know, then write that. The test: a sentence that could appear unchanged in another project's documentation is usually feeling rather than mechanism. Keep it anyway if it states a fact, instruction, or number. Cutting is the right move when no concrete fact is available to replace it; inventing one would break "don't add content".
+
+**Avoid patterns like:**
+- "the database stays close at hand"
+- "SQL you can actually read"
+- "types that follow your schema"
+
+#### Dense Sentences
+
+Sentences stacked with enough clauses that the reader backtracks to parse them. Split them, or drop the clauses that aren't carrying weight. This is not license to chop everything into fragments; see `#### Short Punchy Fragments` for the opposite failure. The target is varied length where each sentence parses on the first read, not a uniform one-idea-per-sentence cadence.
+
+**Avoid patterns like:**
+- "The loader, which resolves paths relative to the config root unless an override is present, parses each file and, assuming validation passes, registers the result."
+- "Because the cache warms at boot, and because the scheduler defers until the first request lands, cold starts, which used to dominate p99, no longer matter."
+
+#### Adverbs Propping Up Weak Verbs
+
+An adverb doing the work the verb should be doing. "Runs quickly" wants "is fast" or the measured number; "significantly improves" wants the delta. If the adverb is load-bearing, the verb is the wrong verb, so replace the verb, or supply the figure when the text already gives one; when it gives none, cut the adverb and leave the plain claim. Distinct from `#### "Quietly" and Other Magic Adverbs`, which covers adverbs that inflate significance rather than prop up a verb.
+
+**Avoid patterns like:**
+- "significantly improves throughput"
+- "the parser runs quickly on large files"
+- "substantially reduces the error rate"
+
 ## Worked example
 
 Input:
 
 ```
-Productivity tools serve as a foundation of modern software work -- not a flashy revolution, but the kind of utility that quietly reshapes how teams build. Here's the kicker: most developers don't realize how much they rely on them. The result? Higher throughput.
+Productivity tools serve as a foundation of modern software work -- not a flashy revolution, but the kind of utility that quietly reshapes how teams build. Here's the kicker: most developers don't realize how much they rely on them. The result? Higher throughput. The good ones stay close at hand.
 
-**Speed**: faster iteration cycles.
-**Quality**: fewer bugs in production.
+**Speed**: speed is significantly improved, from 2.1s to 0.8s.
+**Quality**: fewer bugs reach production.
 ```
 
 Output (rewritten text only — nothing before or after):
@@ -443,6 +496,12 @@ Output (rewritten text only — nothing before or after):
 ```
 Productivity tools are a foundation of modern software work. Most developers don't realize how much they rely on them, and the result is higher throughput.
 
-Speed: faster iteration cycles.
-Quality: fewer bugs in production.
+**Speed**: improved from 2.1s to 0.8s.
+**Quality**: fewer bugs reach production.
 ```
+
+### Notes on the example (reference only, never emitted)
+
+These notes explain the judgment calls behind the output above. `## Output format` still governs: rewritten text, nothing else.
+
+"The good ones stay close at hand" names a feeling and carries no fact, so it goes rather than getting reworded; inventing a concrete detail to put in its place would break "don't add content". The `**Speed**` line restated its own label, so the restatement goes and the label stays with the list; "significantly" goes because the text already supplies the figure the adverb was standing in for. Deleting the line outright would drop a claim the original made. `**Quality**` keeps its bold because the label names the item and the detail after it is new.
