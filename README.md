@@ -31,6 +31,8 @@ flags.
 - `btav-how` — Explain how a subsystem works, anchored to `file:line`
 - `btav-why` — Dig up why code is the way it is from git and PR history
 - `btav-blast` — Map what a change could break beyond the diff
+- `btav-arena` — Spawn N parallel attempts, pick a base, graft in the best of the rest
+- `btav-bro` — Restate the last message in plain language
 - `btav-mode` — Session mode that routes tasks to the matching skill above
 
 All are explicit-invocation only — they don't auto-fire on adjacent phrasings, `btav-mode` included.

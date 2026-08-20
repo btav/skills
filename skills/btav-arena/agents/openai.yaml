@@ -1,0 +1,7 @@
+interface:
+  display_name: "btav arena"
+  short_description: "Spawn N parallel attempts, pick a base, graft in the best of the rest"
+  default_prompt: "Use $btav-arena to fan out N parallel candidates at the same task, pick the strongest as a base, and graft the best parts of the losers into it."
+
+policy:
+  allow_implicit_invocation: false
