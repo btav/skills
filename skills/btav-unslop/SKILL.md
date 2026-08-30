@@ -27,18 +27,22 @@ Apply these rules in order:
 3. **Restructure only when required.** Keep the original paragraph and sentence order unless the meaning is broken or the flow is genuinely incoherent. A single awkward sentence is not a reason to reorganize.
 4. **Scrub AI writing tropes.** Apply the catalog in `## AI writing tropes to avoid` below to every sentence.
 5. **Don't add content.** No new claims, facts, examples, or arguments. Editing only.
-6. **Don't AI-ify.** Don't introduce headings, bullet lists, em dashes, or markdown formatting the original didn't have.
+6. **Don't AI-ify.** Don't introduce headings, bullet lists, em dashes, or markdown formatting into the rewritten text if the original didn't have them. The plain-text fence required below is only a copy-safe delivery wrapper.
 7. **Keep the rhythm human.** Vary sentence length; uniform structure and a one-thought-per-sentence cadence are themselves tells. Never add opinions, claims, or first-person voice the original didn't have.
 8. **Self-audit before printing.** Reread the finished rewrite against the catalog and the rules above, and fix only what they name. Run this pass silently; it never appears in the output.
 
 ## Output format
 
-Output **only** the rewritten text. Nothing else.
+Output the rewritten text in exactly one plain-text fenced code block. Nothing before or after the block. This makes the copy button preserve spaces and line breaks exactly.
 
+- Open the block with ` ```text ` and close it with ` ``` `. The fence is not part of the rewritten text.
+- If the text itself contains a triple-backtick fence, use an outer fence with more backticks than any run in the text.
+- Do not add a leading or trailing blank line inside the fence.
+- For ordinary prose and email, do not hard-wrap lines. Keep each paragraph on one continuous line and put exactly one blank line between paragraphs.
+- Preserve meaningful single line breaks in poetry, addresses, signatures, and list items.
 - No preamble ("Here is the improved version:").
 - No change log or summary of edits.
-- No quoted-block wrapping unless the original was already in a code fence.
-- If the input is already clean, output it unchanged.
+- If the input is already clean, leave its content unchanged and still use the copy-safe fence.
 
 ## Rules
 
@@ -491,9 +495,9 @@ Productivity tools serve as a foundation of modern software work -- not a flashy
 **Quality**: fewer bugs reach production.
 ```
 
-Output (rewritten text only — nothing before or after):
+Output (one copy-safe block and nothing else):
 
-```
+```text
 Productivity tools are a foundation of modern software work. Most developers don't realize how much they rely on them, and the result is higher throughput.
 
 **Speed**: improved from 2.1s to 0.8s.
@@ -502,6 +506,6 @@ Productivity tools are a foundation of modern software work. Most developers don
 
 ### Notes on the example (reference only, never emitted)
 
-These notes explain the judgment calls behind the output above. `## Output format` still governs: rewritten text, nothing else.
+These notes explain the judgment calls behind the output above. `## Output format` still governs: one copy-safe block and nothing else.
 
 "The good ones stay close at hand" names a feeling and carries no fact, so it goes rather than getting reworded; inventing a concrete detail to put in its place would break "don't add content". The `**Speed**` line restated its own label, so the restatement goes and the label stays with the list; "significantly" goes because the text already supplies the figure the adverb was standing in for. Deleting the line outright would drop a claim the original made. `**Quality**` keeps its bold because the label names the item and the detail after it is new.
