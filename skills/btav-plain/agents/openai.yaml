@@ -1,0 +1,7 @@
+interface:
+  display_name: "btav plain"
+  short_description: "Check a document against the four ISO 24495-1 plain language principles"
+  default_prompt: "Use $btav-plain to audit the supplied document against the four plain language principles and report findings."
+
+policy:
+  allow_implicit_invocation: false

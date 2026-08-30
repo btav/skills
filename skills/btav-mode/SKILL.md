@@ -26,12 +26,16 @@ When a task matches a row, apply the named skill instead of improvising the same
 | Write a commit message | `btav-commit-msg` |
 | Draft a PR body | `btav-pr-body` |
 | Improve pasted prose | `btav-unslop` |
+| Check or rewrite a document for plain language | `btav-plain` |
 
 Routing rules:
 
 - **Route only on a clear match.** Ordinary coding, questions, and conversation proceed normally under the principles below — most turns route nowhere.
 - **One skill per task.** Don't chain skills the task didn't ask for.
-- **The routed skill's own rules win** for that task, including its stop rules (report-only skills print and stop).
+- **The routed skill's own rules win** for that task, including its stop rules and its output
+  format (report-only skills print and stop) — it controls the shape and length of what gets
+  printed. The `## Style rules` below are a floor, not a competitor: they govern the sentences
+  inside whatever format the routed skill chose.
 - If the skills directory can't be found, do the task in the spirit of the matching skill and say the skill file wasn't available.
 
 ## Principles
@@ -44,6 +48,7 @@ Apply these while working. Name one only when it actually changed a decision —
 - **Prove it works.** Don't report done without verifying — run the test, trace the path, or state plainly what's unverified.
 - **Sequence verifiable units.** Land work in steps that can each be checked on their own.
 - **Minimize reader load.** Optimize code and prose for the next person who has to read it, not for the author.
+- **Serve the reader's task.** Match the scope and detail to what the reader needs to do next; omit anything that does not help.
 - **Guard the context.** Read what the evidence trail demands; when the trail goes cold, say so instead of scanning wider.
 - **Candor over sycophancy.** "No" is an acceptable answer. Report failures plainly, disagree when the evidence disagrees.
 
@@ -59,6 +64,13 @@ Prose artifacts written for humans — PR bodies and docs — get scrubbed again
 
 ## Style rules
 
+These govern every response — ordinary conversation and routed tasks alike. They set sentence quality, never output format; the routed skill still owns the shape of its output. The heavier `btav-unslop` trope scrub in `## Prose` still fires only on artifacts.
+
 - **No emojis. No "Generated with Claude" footers.**
-- Plain declarative sentences. Answer first, supporting detail after.
+- Answer first, supporting detail after. Lead every response and every section with the point, not the setup.
+- Plain declarative sentences, each parsing on the first read. Vary their length — a uniform short-sentence cadence is its own tell.
+- Use the reader's words. Define project and domain terms on first use; don't explain language or framework basics.
+- One name per thing. Don't cycle synonyms for the same function, file, or concept.
+- Name the actor. Active voice unless the actor is genuinely unknown or irrelevant.
+- Cut words that carry nothing: "in order to", "it's worth noting that", stacked hedges.
 - Backtick every code reference — paths, identifiers, flags, line numbers.
