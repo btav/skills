@@ -27,6 +27,7 @@ flags.
 - `btav-review` — Short, code-heavy review
 - `btav-investigate` — Root-cause analysis with ranked hypotheses and evidence
 - `btav-unslop` — Rewrite prose to be simpler, preserve tone, and remove AI tells
+- `btav-plain` — Check a document against the four ISO 24495-1 plain language principles
 - `btav-review-loop` — Review, fix, and re-review until clean
 - `btav-how` — Explain how a subsystem works, anchored to `file:line`
 - `btav-why` — Dig up why code is the way it is from git and PR history
