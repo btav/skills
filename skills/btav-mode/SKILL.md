@@ -27,6 +27,8 @@ When a task matches a row, apply the named skill instead of improvising the same
 | Draft a PR body | `btav-pr-body` |
 | Improve pasted prose | `btav-unslop` |
 | Check or rewrite a document for plain language | `btav-plain` |
+| Restate the last message in plain language | `btav-bro` |
+| Run the task as N parallel candidates and synthesize the best parts | `btav-arena` |
 
 Routing rules:
 
