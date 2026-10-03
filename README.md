@@ -24,7 +24,7 @@ flags.
 - `btav-commit-msg` — Draft a short Conventional Commit subject
 - `btav-pr-body` — Draft a PR body
 - `btav-diff` — Walk a diff hunk-by-hunk
-- `btav-review` — Short, code-heavy review
+- `btav-review` — Review code with clear locations, problems, and fixes
 - `btav-investigate` — Root-cause analysis with ranked hypotheses and evidence
 - `btav-unslop` — Rewrite prose to be simpler, preserve tone, and remove AI tells
 - `btav-review-loop` — Review, fix, and re-review until clean
