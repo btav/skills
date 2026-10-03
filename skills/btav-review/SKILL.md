@@ -1,6 +1,6 @@
 ---
 name: btav-review
-description: Short, code-heavy review of a diff / branch / PR using Conventional Comments prefixes (issue / suggestion / question / nitpick / praise) with a final verdict line.
+description: Review a diff / branch / PR with clear code locations, plain explanations of problems, and suggested fixes shown in small diffs, using Conventional Comments prefixes and a final verdict line.
 disable-model-invocation: true
 ---
 
@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Invoked explicitly via `/btav-review` in Claude, `$btav-review` in Codex, or `/skill:btav-review` in Pi. Do not auto-fire on adjacent phrasings.
 
-Short, code-heavy reviews. Show the change, don't describe it. Approve generously.
+Short reviews that make each finding easy to understand: where it is, what goes wrong, and how to fix it. Show a small code diff alongside the explanation. Approve generously.
 
 ## What to review
 
@@ -16,7 +16,7 @@ Pick the source of changes in this order, unless the user specifies otherwise:
 
 1. **A specific PR** if the user named one (`gh pr diff <N>` for the diff, `gh pr view <N>` for the title/body).
 2. **Current branch vs the default branch** if you're inside a git repo on a feature branch (`git diff $(git merge-base HEAD origin/main 2>/dev/null || git merge-base HEAD main)..HEAD`).
-3. **Uncommitted working changes** otherwise (`git diff HEAD`).
+3. **Uncommitted working changes** otherwise (`git diff HEAD`, plus untracked files from `git ls-files --others --exclude-standard :/`).
 
 If you're unsure which the user meant, ask in one short sentence before reviewing.
 
@@ -40,12 +40,12 @@ In rough priority order:
 
 ### Lenses (sharpen findings — never lower the bar)
 
-A lens is a way of looking at the diff. It can sharpen a `why:` line, but it never justifies a comment you wouldn't otherwise leave. If the only reason to flag something is "it violates law X", drop it.
+A lens is a way of looking at the diff. It can help identify a concrete problem, but it never justifies a comment you wouldn't otherwise leave. If the only reason to flag something is "it violates law X", drop it.
 
 - **YAGNI** — speculative abstractions, config knobs nobody sets, parameters with one caller, dead branches added "for later".
 - **DRY (real)** — the same knowledge expressed in two places. Coincidental similarity doesn't count.
 - **Law of Demeter** — `a.b.c.d` chains that reach through and depend on the internals of an unrelated object.
-- **Hyrum's Law** — when the diff changes an exported signature, return shape, error shape, or ordering, flag consumer-impact risk even if the typed contract still compiles.
+- **Hyrum's Law** — when the diff changes an exported signature, return shape, error shape, or ordering, check whether callers depend on the old behavior, even if the typed contract still compiles.
 - **Premature Optimization** — micro-opts (manual unrolling, custom hash, hand-rolled cache) added off the hot path with no benchmark.
 - **Broken Windows** — commented-out code, `// TODO(remove)`, dead imports, or half-finished work *introduced by this diff*. Pre-existing rot is out of scope.
 
@@ -77,16 +77,25 @@ Use these six prefixes, in this severity order:
 
 ````
 <prefix> <one-line summary>
-<file>:<line>
+
+<file>:<line> · <function, component, or module>
+
+Problem: <what goes wrong and its concrete consequence>
+Fix: <the smallest supported change>
+
 ```diff
 - <old code>
 + <suggested code>
 ```
 ````
 
-Optional single `why:` line under the snippet — capped at one sentence. If you can't say it in one sentence, it's probably two comments. A `why:` may name a lens (`why: YAGNI — this branch is unreachable`) only when the name actually sharpens the point. Never as filler.
+Use verified line numbers from the version being reviewed, pointing to the relevant changed code. Include the enclosing function, component, or module when it helps locate the code; omit it when redundant or unavailable.
 
-For `question:` and `praise:`, the diff block is optional — sometimes the snippet is just the relevant `+` lines with no replacement.
+The reader should understand each finding without decoding the diff. The summary names the defect; `Problem:` gives the triggering condition and consequence for bugs, or the specific reading difficulty for clarity suggestions; `Fix:` gives the change plus anything the diff can't show, such as why the replacement is safe. Keep each to one short sentence, and don't restate one in another.
+
+Show only the code needed to understand the change. Match the surrounding behavior and conventions; do not invent fallback values, APIs, or replacement code without evidence. If the problem is confirmed but an exact patch is not supported, describe the fix in words and omit the diff.
+
+`issue` and `suggestion` comments always include `Problem:` and `Fix:`. For `nitpick:`, `question:`, and `praise:`, keep the summary and location and add only what the reader needs: a one-line diff, a brief question, or a sentence.
 
 ### Order
 
@@ -107,47 +116,42 @@ Don't pad. Don't list files you checked. Don't add a footer.
 
 ## Style rules
 
-- **Show code, don't describe it.** If you can express the point as a `-`/`+` snippet, do that instead of writing a paragraph. The snippet is the comment.
-- **One sentence max** per `why:` line. Often you don't need one — the diff speaks for itself.
+- **Use plain, concrete language.** Avoid jargon, design-law names, and vague claims such as "cleaner," "more robust," or "bad practice." Keep technical names when they identify the actual code.
 - **No emojis. No "Generated with Claude" footers.** This is inline output, not a posted comment.
 - **Approve generously** — treat blocking severity as a real bar. Reserve `request changes` for diffs that actually shouldn't merge.
 - **Don't run** the build, typechecker, linter, or tests. Don't post anywhere. Print the review and stop.
 
 ## Worked example
 
-Input: a small TypeScript PR touching three files, with one real bug, one swallowed error, one minor smell, one bad name.
+Input: a TypeScript PR accidentally switches the production user fetch to a staging URL; the surrounding module already imports the environment-specific `API_BASE_URL`. It also adds a search hook that lets an older response overwrite newer results (the codebase has no request-cancellation pattern), and filters inactive users out of search without explaining that behavior change.
 
 Output:
 
 ````
-issue (blocking): wrong endpoint — returns staging data in production
-src/api/users.ts:42
+issue (blocking): hardcoded staging URL
+
+src/api/users.ts:42 · fetchUsers()
+
+Problem: Production builds request users from staging.
+Fix: Use `API_BASE_URL`, which this module already imports for its other requests.
+
 ```diff
 - fetch('https://staging.api.example.com/users')
 + fetch(`${API_BASE_URL}/users`)
 ```
-why: hardcoded staging URL will leak to prod builds.
 
-issue (non-blocking): swallowed error hides retry exhaustion
-src/api/users.ts:58
-```diff
-- } catch (e) { return null }
-+ } catch (e) { logger.warn('user fetch failed', e); return null }
-```
+issue (non-blocking): older search results can overwrite newer ones
 
-suggestion: guard against missing email
-src/components/Profile.tsx:14
-```diff
-- user.email.toLowerCase()
-+ user.email?.toLowerCase()
-```
+src/hooks/useUserSearch.ts:31 · useUserSearch()
 
-nitpick: `data` is vague
-src/hooks/useUser.ts:7
-```diff
-- const data = await getUser()
-+ const user = await getUser()
-```
+Problem: When two searches overlap, the slower response sets `results` last, so the list can show matches for the previous query.
+Fix: Ignore responses whose query no longer matches the input.
+
+question: confirm whether search should hide inactive users
+
+src/search/users.ts:27 · searchUsers()
+
+The new filter removes inactive users from every search result; is that intended?
 
 Verdict: request changes
 ````
