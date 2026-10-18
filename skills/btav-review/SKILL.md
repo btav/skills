@@ -34,14 +34,7 @@ In rough priority order:
 
 ### Lenses (sharpen findings — never lower the bar)
 
-A lens is a way of looking at the diff. It can help identify a concrete problem, but it never justifies a comment you wouldn't otherwise leave. If the only reason to flag something is "it violates law X", drop it.
-
-- **YAGNI** — speculative abstractions, config knobs nobody sets, parameters with one caller, dead branches added "for later".
-- **DRY (real)** — the same knowledge expressed in two places. Coincidental similarity doesn't count.
-- **Law of Demeter** — `a.b.c.d` chains that reach through and depend on the internals of an unrelated object.
-- **Hyrum's Law** — when the diff changes an exported signature, return shape, error shape, or ordering, check whether callers depend on the old behavior, even if the typed contract still compiles.
-- **Premature Optimization** — micro-opts (manual unrolling, custom hash, hand-rolled cache) added off the hot path with no benchmark.
-- **Broken Windows** — commented-out code, `// TODO(remove)`, dead imports, or half-finished work *introduced by this diff*. Pre-existing rot is out of scope.
+A lens is a way of looking at the diff that can help identify a concrete problem. Read the shared [Lens catalog](references/lenses.md) for the six lenses and what each one covers.
 
 ## What NOT to flag
 
