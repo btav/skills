@@ -12,13 +12,7 @@ Three fixed sections. Brief. Semantic. Stop.
 
 ## What to summarize
 
-Pick the source of changes in this order, unless the user specifies otherwise:
-
-1. **A specific PR** if the user named one (`gh pr diff <N>` for the diff, `gh pr view <N>` for the title/body).
-2. **Current branch vs the default branch** if you're inside a git repo on a feature branch (`git diff $(git merge-base HEAD origin/main 2>/dev/null || git merge-base HEAD main)..HEAD`, plus `git log` over the same range for commit messages — they often state the *why*).
-3. **Uncommitted working changes** otherwise (`git diff HEAD`).
-
-If unsure which the user meant, ask in one short sentence before drafting.
+Read [Shared diff selection](../btav-review/references/diff-selection.md) before choosing the source and base. It defines PR, committed-branch, and working-tree scopes, including untracked files. Read commit messages over the same selected range when available; they often state the *why*.
 
 Read the changed files when the diff alone doesn't make the behavior change obvious. Don't read the whole repo — just enough to describe each file's change in one sentence.
 
@@ -77,54 +71,54 @@ Pick exactly one — the dominant intent of that file's change:
 - 1–2 sentences each. If you need three, you're rambling — cut.
 - Inline code references still get backticks (file paths, function/class names, identifiers, flags) — same rule as Changes.
 - **Description** is *what* the PR does, in user-facing or behavioral terms.
-- **Why** is *why* — the problem, user need, incident, or follow-up that motivated it. Don't restate Description in different words. If the diff alone doesn't reveal the why and the commit messages / PR title don't either, write one short honest sentence ("follow-up to remove dead code after the X migration") rather than inventing motivation.
+- **Why** is *why* — the problem, user need, incident, or follow-up that motivated it. Don't restate Description in different words. Use only motivation supported by the supplied context, diff, or history. If none is established, say "The supplied changes do not record the motivation." Don't invent an incident, migration, or chronology to fill the section.
 
 ## Style rules
 
 - **No emojis.** No "Generated with Claude" footer. No preamble ("Here is your PR description:") and no trailing commentary.
-- **Prose pass.** Before printing, read `btav-unslop/SKILL.md` from the same skills directory this skill was loaded from (`~/.claude/skills/btav-unslop/SKILL.md` in Claude, `${CODEX_HOME:-$HOME/.codex}/skills/btav-unslop/SKILL.md` in Codex, `~/.pi/agent/skills/btav-unslop/SKILL.md` in Pi), then scrub the Description and Why sentences against its trope catalog. If the skill isn't available, skip the pass — never block the draft on it.
+- **Prose pass.** Before printing, apply the sibling [Prose checklist](../btav-unslop/references/prose-checklist.md) to Description and Why. Consult a relevant section of its linked trope catalog only when a specific pattern needs clarification. This skill retains its template and output format. If the checklist isn't available, skip the pass — never block the draft on it.
 - Print the three sections and stop.
 - Don't run the build, typechecker, linter, or tests.
 - Don't post to GitHub. Don't run `gh pr edit` or `gh pr create` unless the user explicitly asks.
 
 ## Worked example
 
-Input: a small TypeScript branch that fixes an API base URL leak, adds an email guard, and renames a hook variable.
+Input: a small TypeScript branch that replaces the hardcoded staging host in `src/api/users.ts` with the configured `API_BASE_URL`, guards access to a possibly missing `user.email` in `src/components/Profile.tsx`, and renames a local variable from `data` to `user` in `src/hooks/useUser.ts`.
 
 Output:
 
 ````
 ```markdown
 ### Description
-Fix a hardcoded staging URL leaking into production builds and harden the profile page against users with no email on file.
+Use the configured API host for user requests and prevent missing-email crashes on the profile page.
 
 ### Why
-A prod incident last week traced back to the staging URL shipping in the production bundle; the `user.email` crash surfaced in the same triage and was cheap to fix in the same PR.
+User requests currently always reach staging, and profiles can crash when an email address is missing.
 
 ### Changes
 - (fix) `src/api/users.ts` — routes user fetches through `API_BASE_URL` instead of a hardcoded staging host.
 - (fix) `src/components/Profile.tsx` — guards against `user.email` being undefined before lowercasing.
-- (refactor) `src/hooks/useUser.ts` — renames `data` to `user` for readability at call sites.
+- (refactor) `src/hooks/useUser.ts` — renames the local variable from `data` to `user` for readability inside the hook.
 ```
 ````
 
 ## Worked example — grouping
 
-Input: a branch that moves `utils/date.ts` to `lib/date.ts`, updates the 23 files that imported it, and adds a unit test for one previously-untested helper.
+Input: a branch that moves `utils/date.ts` to `lib/date.ts`, updates the 23 files that imported it, and adds `lib/date.test.ts` with a unit test for the previously-untested `formatRelative` helper. The supplied context and commit messages do not explain why the move or test was needed.
 
 Output (note the import updates are a single grouped bullet — not 23 lines):
 
 ````
 ```markdown
 ### Description
-Relocate the date utilities into `lib/` to match the new module layout and add a missing test for `formatRelative`.
+Move the date utilities into `lib/` and add a unit test for `formatRelative`.
 
 ### Why
-The `lib/` reorg is winding down; `utils/date.ts` was the last util still living under `utils/`. The test was a gap surfaced by the move.
+The supplied changes do not record the motivation.
 
 ### Changes
 - (refactor) `lib/date.ts` — moved from `utils/date.ts`; no behavior change.
 - (refactor) updates imports in 23 call sites to point at the new path.
-- (test) `lib/date.test.ts` — adds coverage for `formatRelative` across DST boundaries.
+- (test) `lib/date.test.ts` — adds a unit test for the previously-untested `formatRelative` helper.
 ```
 ````

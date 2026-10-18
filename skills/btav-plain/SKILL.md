@@ -82,19 +82,17 @@ ISO 24495-1:2023 defines plain language as writing the intended reader can find,
 
 Off by default. Fires on `--rewrite` or an explicit request.
 
-Output the rewritten document in exactly one plain-text fenced code block. Use a fence longer than any backtick fence inside the document. Nothing before or after the block. Same contract as `btav-unslop` `## Output format` — the fence is a copy-safe wrapper, not part of the text.
+Output the rewritten document in exactly one plain-text fenced code block. Use a fence longer than any backtick fence inside the document. Nothing before or after the block. The fence is a copy-safe wrapper, not part of the text.
 
 Rewrite mode applies Relevant, Understandable, and Usable. It does not restructure the document, add headings, or invent facts to fill gaps; preserve gaps that require information the user did not supply.
 
 ## Relationship to btav-unslop
 
-`btav-unslop` owns the catalog of AI writing tells. This skill owns the reader-centered checklist. They overlap, so the boundaries are explicit.
+Apply the sibling [Prose checklist](../btav-unslop/references/prose-checklist.md) alongside this skill's reader-centered principles. Consult its linked trope reference only when a specific pattern needs clarification. If the checklist isn't available, skip that pass — never block the audit on it. This skill retains its audit or rewrite mode and output format.
 
-Load the catalog by reading `btav-unslop/SKILL.md` from the same skills directory this skill was loaded from, then apply its `## AI writing tropes to avoid` section. If the skill isn't available, skip that pass — never block the audit on it.
-
-- **Don't restate what the catalog already covers.** Active voice is `#### Passive Voice Padding`. Filler and hedge stacks are `#### Filler Phrases and Overhedging`. Weak-verb adverbs are `#### Adverbs Propping Up Weak Verbs`. Cite the trope by name instead of writing a second version of the rule.
-- **Sentence length.** The target is *parses on the first read*, not *short*. Never split a sentence that already parses, and never emit three short sentences in a row. `#### Dense Sentences` and `#### Short Punchy Fragments` beat any instinct to shorten.
-- **Headings and lists.** Audit mode may recommend them for a document the reader navigates. Rewrite mode must not introduce headings, bullets, or markdown the original didn't have — `btav-unslop` rule 6 ("Don't AI-ify") wins.
+- **Avoid duplicate findings.** Explain each problem once in terms of its effect on the stated reader. A trope label is optional, not a reason to load the full catalog.
+- **Sentence length.** The target is *parses on the first read*. Split dense sentences when that helps; keep short sentences and varied rhythm when they already work.
+- **Headings and lists.** Audit mode may recommend them for a document the reader navigates. Rewrite mode preserves the original structure and must not introduce headings, bullets, or markdown the original didn't have.
 - **Defining terms.** Define terms the stated reader will not know; don't explain concepts they already understand.
 
 ## Rules

@@ -12,11 +12,7 @@ Run a fresh reviewer. Fix what is real. Re-run the reviewer with cleared context
 
 ## What to review
 
-Pick the source of changes in this order, unless the user specifies otherwise:
-
-1. **A specific PR** if the user named one.
-2. **Current branch vs the default branch** if you're inside a git repo on a feature branch.
-3. **Uncommitted working changes** otherwise.
+Read [Shared diff selection](../btav-review/references/diff-selection.md) before choosing the source and base. Apply its review-loop anchor rules so every pass includes the full cumulative local changes and non-ignored untracked files.
 
 Before starting, read the PR title and description or the user's framing. Authorial intent matters for distinguishing intentional changes from accidental regression.
 
@@ -24,17 +20,11 @@ This skill fixes code locally. If the user names a PR URL or number, resolve it 
 
 Skim mechanical churn once and group it. Don't spend loop budget on lockfiles, generated files, formatter sweeps, or repeated import-path updates unless they are the point of the change.
 
-If you're unsure which change set the user meant, ask in one short sentence before starting the loop.
-
 ## Review anchor
 
 Resolve the review anchor once at loop start and keep it fixed for the rest of the loop. Every review and re-review must cover the full cumulative change set against that same anchor.
 
-Anchor rules:
-
-- **Specific PR with a local checkout**: use the checked-out PR branch's merge-base with the default branch as the anchor, then review the full cumulative local diff from that anchor.
-- **Current branch vs the default branch**: use the current branch's merge-base with the default branch as the anchor, then review the full cumulative branch diff from that anchor.
-- **Uncommitted working changes**: use `HEAD` as the anchor, then review the full cumulative working tree diff from that anchor.
+Use the shared guide's **Review-loop anchor** section to resolve the commit ID and build each diff. A PR uses its actual target branch; every pass also inspects untracked files, including files added by fixes.
 
 Do not review only the latest fix hunk. Do not switch anchors mid-loop.
 
@@ -49,7 +39,7 @@ When subagents are available, start a fresh subagent and have it use `btav-revie
 Prompt shape:
 
 ```text
-Use the `btav-review` skill at <path> to review the full cumulative change set against <review-anchor>. Include both the original changes and all fixes made in this loop. Return only the review.
+Use the `btav-review` skill at <path> to review the full cumulative local change set against the fixed commit <review-anchor>. Include the original changes, all fixes made in this loop, staged and unstaged changes, and non-ignored untracked files. Return only the review.
 ```
 
 Give the subagent the minimum necessary context. Don't leak your suspected bugs, intended fixes, or prior conclusions into the prompt.

@@ -12,13 +12,7 @@ Walk the diff hunk-by-hunk. Show, then explain in one breath. Flag a lens only w
 
 ## What to walk through
 
-Pick the source of changes in this order, unless the user specifies otherwise:
-
-1. **A specific PR** if the user named one (`gh pr diff <N>` for the diff, `gh pr view <N>` for the title/body).
-2. **Current branch vs the default branch** if you're inside a git repo on a feature branch (`git diff $(git merge-base HEAD origin/main 2>/dev/null || git merge-base HEAD main)..HEAD`).
-3. **Uncommitted working changes** otherwise (`git diff HEAD`, plus untracked files from `git ls-files --others --exclude-standard :/`).
-
-If you're unsure which the user meant, ask in one short sentence before walking.
+Read [Shared diff selection](../btav-review/references/diff-selection.md) before choosing the source and base. It defines PR, committed-branch, and working-tree scopes, including untracked files.
 
 Before reading the diff, read the PR title and description (or the user's framing if it's a local diff). Authorial intent — what the PR claims to do — is what lets you describe each hunk in behavioral terms instead of just narrating the textual edit.
 
@@ -96,7 +90,7 @@ Rules for notes:
 
 ## Worked example
 
-Input: a small TypeScript PR — fixes a hardcoded staging URL, hardens a profile component, renames a hook variable, and updates 14 import paths after a util move.
+Input: a small TypeScript PR — replaces a hardcoded staging URL with the configured API base URL, adds a throwing wrapper with no callers in the diff, guards a profile component against missing email addresses, renames a hook's local variable, and updates 14 import paths after moving `utils/date` to `lib/date`.
 
 Output:
 
@@ -113,7 +107,7 @@ Output:
 ```
 
 #### Change
-Routes user fetches through `API_BASE_URL` instead of a hardcoded staging host, so prod builds hit prod.
+Uses the configured `API_BASE_URL` for user requests instead of always calling staging.
 
 ---
 
@@ -162,7 +156,7 @@ Guards against `user.email` being undefined before lowercasing, so users with no
 ```
 
 #### Change
-Renames `data` to `user` so call sites read as `const user = useUser(id)` instead of `const user = useUser(id).data`-style ambiguity.
+Renames the local variable from `data` to `user` to clarify what the hook returns; the return shape and callers are unchanged.
 
 ---
 
