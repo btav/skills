@@ -12,13 +12,7 @@ Short reviews that make each finding easy to understand: where it is, what goes 
 
 ## What to review
 
-Pick the source of changes in this order, unless the user specifies otherwise:
-
-1. **A specific PR** if the user named one (`gh pr diff <N>` for the diff, `gh pr view <N>` for the title/body).
-2. **Current branch vs the default branch** if you're inside a git repo on a feature branch (`git diff $(git merge-base HEAD origin/main 2>/dev/null || git merge-base HEAD main)..HEAD`).
-3. **Uncommitted working changes** otherwise (`git diff HEAD`, plus untracked files from `git ls-files --others --exclude-standard :/`).
-
-If you're unsure which the user meant, ask in one short sentence before reviewing.
+Read [Shared diff selection](references/diff-selection.md) before choosing the source and base. It defines PR, committed-branch, and working-tree scopes, including untracked files and fixed review-loop anchors.
 
 Before reading the diff, read the PR title and description (or the user's framing if it's a local diff). Authorial intent — what the PR claims to do — is what lets you distinguish intentional from accidental changes. Skim mechanical churn (cache-key bumps, lockfiles, regenerated snapshots) once and don't re-flag it.
 

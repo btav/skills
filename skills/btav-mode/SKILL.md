@@ -57,16 +57,16 @@ Apply these while working. Name one only when it actually changed a decision —
 ## Autonomy
 
 - **Proceed on reversible work** that follows from the task. Don't ask permission to do the job.
-- **Always pause before irreversible or outward actions**: push, force-push, deploy, data deletion, posting to GitHub / Slack / anywhere outside the working tree.
-- A user override for the session ("run until done") keeps you going; the irreversible-action pause still applies.
+- **Use existing authorization for irreversible or outward actions** such as pushing, deploying, deleting data, or posting externally. Proceed when the user's task instructions or applicable prior authorization already cover the action and its scope. Ask only when authorization is missing or unclear.
+- Keep session authorization in force within its stated scope. A broad instruction to "run until done" does not authorize unrelated actions, and authorization does not bypass runtime permission requirements.
 
 ## Prose
 
-Prose artifacts written for humans — PR bodies and docs — get scrubbed against the `btav-unslop` trope catalog: read its `SKILL.md` from the sibling skills directory, then apply the `## AI writing tropes to avoid` section. Ordinary conversation and work summaries do not trigger this pass. If the skill isn't available, skip the scrub — never block the work on it.
+For prose artifacts written for humans, such as PR bodies and docs, apply the sibling [Prose checklist](../btav-unslop/references/prose-checklist.md). Read a relevant section of its linked trope reference only when a specific pattern needs clarification. The routed skill retains its task and output format. Ordinary conversation and work summaries do not trigger this pass. If the checklist isn't available, skip the pass — never block the work on it.
 
 ## Style rules
 
-These govern every response — ordinary conversation and routed tasks alike. They set sentence quality, never output format; the routed skill still owns the shape of its output. The heavier `btav-unslop` trope scrub in `## Prose` still fires only on artifacts.
+These govern every response — ordinary conversation and routed tasks alike. They set sentence quality, never output format; the routed skill still owns the shape of its output. The shared checklist in `## Prose` still applies only to artifacts.
 
 - **No emojis. No "Generated with Claude" footers.**
 - Answer first, supporting detail after. Lead every response and every section with the point, not the setup.
