@@ -1,7 +1,7 @@
 interface:
   display_name: "btav review"
-  short_description: "Review code with clear locations, problems, and fixes"
-  default_prompt: "Use $btav-review to review the current diff with concise Conventional Comments that explain each problem and fix."
+  short_description: "Review code with per-file summaries, findings, and fixes"
+  default_prompt: "Use $btav-review to summarize every changed file with useful line references, then review the current diff with concise Conventional Comments that explain each problem and fix."
 
 policy:
   allow_implicit_invocation: false

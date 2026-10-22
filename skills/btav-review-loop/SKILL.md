@@ -67,15 +67,15 @@ Treat these as non-fixable by default:
 - `question:`
 - `praise:`
 
-A clean pass is a review with no actionable findings. Ignore `praise:` for loop control.
+A clean pass is a review with no actionable findings. Determine this from the findings section, ignoring file-summary bullets and `praise:` for loop control.
 
-If the review output is exactly:
+If the review has no findings and ends with:
 
 ```text
 Verdict: approve — no issues found.
 ```
 
-that is a clean pass.
+that is a clean pass, including when it starts with a file summary or reports no changed files. Do not require the entire review output to match the verdict line.
 
 If only `question:` items remain, stop and show them to the user instead of guessing.
 
