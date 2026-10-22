@@ -1,6 +1,6 @@
 ---
 name: btav-review
-description: Review a diff / branch / PR with clear code locations, plain explanations of problems, and suggested fixes shown in small diffs, using Conventional Comments prefixes and a final verdict line.
+description: Review a diff / branch / PR with a bullet summary of every changed file, clear code locations, plain explanations of problems, and suggested fixes shown in small diffs, using Conventional Comments prefixes and a final verdict line.
 disable-model-invocation: true
 ---
 
@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Invoked explicitly via `/btav-review` in Claude, `$btav-review` in Codex, or `/skill:btav-review` in Pi. Do not auto-fire on adjacent phrasings.
 
-Short reviews that make each finding easy to understand: where it is, what goes wrong, and how to fix it. Show a small code diff alongside the explanation. Approve generously.
+Start with a short summary of every changed file. Then make each finding easy to understand: where it is, what goes wrong, and how to fix it. Show a small code diff alongside the explanation. Approve generously.
 
 ## What to review
 
@@ -49,7 +49,25 @@ If you're not sure whether something is real, drop it. False positives are worse
 
 ## Output format
 
-Use these six prefixes, in this severity order:
+### File summary
+
+Start with a `## Changes` section containing one bullet per changed file in the selected review scope, sorted by repository-relative path:
+
+```text
+- `package-lock.json`: Updates dependency resolutions.
+- `src/api/users.ts:42`: Routes user requests to the staging API.
+- `src/hooks/useUserSearch.ts:18`: Adds a search hook with loading and error states.
+```
+
+- Keep each bullet to one short sentence describing what changed in behavior or purpose. Use the full repository-relative path so files with the same name remain distinguishable.
+- Include every changed file, even when it has no findings or contains only generated, lockfile, formatting, or other mechanical changes. Include non-ignored untracked files when they belong to the selected scope. Skimming mechanical churn does not remove it from the summary.
+- Identify added and deleted files. For a rename, use one bullet with `old/path → new/path` and describe any accompanying edits; sort it by the new path.
+- Add verified line references from the version being reviewed when they help locate the change. Omit them for deleted files or when unavailable or unhelpful.
+- Keep these bullets descriptive. Put review findings and suggested code diffs in the findings section.
+
+### Findings
+
+If there are findings, follow the summary with a `## Findings` section. Use these six prefixes, in this severity order:
 
 | Prefix | Meaning | Blocks merge? |
 |---|---|---|
@@ -86,20 +104,35 @@ Show only the code needed to understand the change. Match the surrounding behavi
 
 ### Order
 
-1. Group by severity, blocking first. Within a group, order by file.
-2. End with a single verdict line:
+1. Start with the file summary.
+2. Group findings by severity, blocking first. Within a group, order by file.
+3. End with a single verdict line:
    - `Verdict: approve` — no blocking issues. This is the default whenever everything is `suggestion:` / `question:` / `nitpick:` / `praise:` / non-blocking.
    - `Verdict: request changes` — at least one `issue (blocking):`. Reserved for things that genuinely can't merge as-is.
 
 ### When there's nothing to flag
 
-Output exactly one line:
+Keep the file summary, omit the findings section, and end with `Verdict: approve — no issues found.` For example:
 
-```
+```text
+## Changes
+
+- `docs/setup.md → docs/install.md`: Renames the installation guide.
+- `src/legacy.ts`: Deletes the legacy adapter.
+- `src/utils/date.ts:1`: Adds shared date-formatting helpers.
+
 Verdict: approve — no issues found.
 ```
 
-Don't pad. Don't list files you checked. Don't add a footer.
+If the selected scope has no changed files, output:
+
+```text
+No changed files.
+
+Verdict: approve — no issues found.
+```
+
+Don't list unchanged files you checked or add a footer.
 
 ## Style rules
 
@@ -110,11 +143,20 @@ Don't pad. Don't list files you checked. Don't add a footer.
 
 ## Worked example
 
-Input: a TypeScript PR accidentally switches the production user fetch to a staging URL; the surrounding module already imports the environment-specific `API_BASE_URL`. It also adds a search hook that lets an older response overwrite newer results (the codebase has no request-cancellation pattern), and filters inactive users out of search without explaining that behavior change.
+Input: a TypeScript PR accidentally switches the production user fetch to a staging URL; the surrounding module already imports the environment-specific `API_BASE_URL`. It also adds a search hook that lets an older response overwrite newer results (the codebase has no request-cancellation pattern), filters inactive users out of search without explaining that behavior change, and updates dependency resolutions in the lockfile.
 
 Output:
 
 ````
+## Changes
+
+- `package-lock.json`: Updates dependency resolutions.
+- `src/api/users.ts:42`: Routes production user requests to the staging API.
+- `src/hooks/useUserSearch.ts:18`: Adds a search hook with loading and error states.
+- `src/search/users.ts:27`: Excludes inactive users from search results.
+
+## Findings
+
 issue (blocking): hardcoded staging URL
 
 src/api/users.ts:42 · fetchUsers()
