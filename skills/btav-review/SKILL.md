@@ -30,7 +30,9 @@ In rough priority order:
 - **Obvious over-engineering introduced by this diff** — only when a smaller replacement is locally provable. Prefer `suggestion:` unless the extra complexity causes a real bug, regression, or convention violation.
 - **Reachability check** — before flagging a logic bug, follow at least one call path to confirm the bad input is actually reachable. If reaching the bug requires conditions you can't verify from the diff and surrounding files, downgrade to `question:` rather than `issue:`.
 
-**Severity calibration.** Bugs in production data paths are blocking. Bugs in dev-only paths (debug channels, source maps, error reporters, dev-mode logging) are usually `issue (non-blocking):` unless they corrupt user data or mask security issues. Bugs in tests, fixtures, and tooling are usually `suggestion:`.
+**Severity calibration.** Bugs in production data paths are blocking. Bugs in dev-only paths (debug channels, source maps, error reporters, dev-mode logging) are usually `issue (non-blocking):` unless they corrupt user data or mask security issues. Bugs in tests, fixtures, and tooling are usually `suggestion:`, unless their demonstrated consequence meets the blocking bar, such as preventing a required build or check from running.
+
+**Tooling evidence.** Stay read-only, but use supplied check output or a verified code path as evidence of a defect in the change. For example, a removed import leaving a reachable call undefined is a real defect even if tooling could detect it. Tie failure output to the reviewed version and explain its consequence; don't assume CI exists, covers the change, or passed. Failure output with an unknown cause is a question, not proof of a regression.
 
 ### Lenses (sharpen findings — never lower the bar)
 
@@ -38,7 +40,7 @@ A lens is a way of looking at the diff that can help identify a concrete problem
 
 ## What NOT to flag
 
-- Lint, typecheck, formatting, missing imports, broken tests — CI handles these.
+- Routine formatting and tooling diagnostics already covered by configured checks. Avoid duplicating raw diagnostics; flag a demonstrated defect that breaks intended behavior or a required check, using the evidence and severity rules above.
 - Pre-existing code outside the diff. (Exception: if the diff *touches* a line and the surrounding context reveals a serious bug introduced by these changes, flag it.)
 - Missing tests or docs unless the project explicitly requires them.
 - Stylistic preferences not grounded in a real readability or correctness gain.

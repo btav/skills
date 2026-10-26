@@ -1,6 +1,6 @@
 ---
 name: btav-pr-body
-description: Draft a PR body using a fixed three-section template — Description / Why / Changes — with Conventional-Commits prefixes per file.
+description: Draft a concise, problem-first PR body with Description / Why / Changes sections, semantic change bullets, and verification evidence when available.
 disable-model-invocation: true
 ---
 
@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Invoked explicitly via `/btav-pr-body` in Claude, `$btav-pr-body` in Codex, or `/skill:btav-pr-body` in Pi. Do not auto-fire on adjacent phrasings.
 
-Three fixed sections. Brief. Semantic. Stop.
+Three fixed sections. Lead with the problem and resulting behavior. Include available verification evidence. Stop.
 
 ## What to summarize
 
@@ -25,7 +25,7 @@ Section titles use `###`, the changes list uses `-` bullets, and any file path, 
 ````
 ```markdown
 ### Description
-<1–2 sentences, plain language, what this PR does>
+<1–2 sentences, plain language, the concrete problem or need and resulting behavior>
 
 ### Why
 <1–2 sentences on motivation / problem solved>
@@ -33,6 +33,8 @@ Section titles use `###`, the changes list uses `-` bullets, and any file path, 
 ### Changes
 - (prefix) `path/to/file.ext` — <one sentence recap of the change>
 - (prefix) `path/to/other.ext` — <one sentence recap>
+
+Verification: <available evidence and result; omit this paragraph when none is available>
 ```
 ````
 
@@ -70,8 +72,16 @@ Pick exactly one — the dominant intent of that file's change:
 - Plain prose. No bullets, no nested headers, no code blocks.
 - 1–2 sentences each. If you need three, you're rambling — cut.
 - Inline code references still get backticks (file paths, function/class names, identifiers, flags) — same rule as Changes.
-- **Description** is *what* the PR does, in user-facing or behavioral terms.
+- **Description** starts with the concrete problem or need, then states the resulting behavior. Use a brief before/after example when it helps. If the problem is not established, describe the behavior change without inventing one.
 - **Why** is *why* — the problem, user need, incident, or follow-up that motivated it. Don't restate Description in different words. Use only motivation supported by the supplied context, diff, or history. If none is established, say "The supplied changes do not record the motivation." Don't invent an incident, migration, or chronology to fill the section.
+
+## Verification evidence
+
+When evidence is available, append a short `Verification:` paragraph after the Changes bullets, inside the same Markdown fence. It is not a fourth section or a semantic change bullet.
+
+- Use observed results from this session, user-supplied results, or check results tied to the selected change set. Attribute user-supplied results instead of implying you ran them.
+- Name the check or reproduction and its actual outcome, including relevant failures or gaps. Only carry evidence forward when it covers the version being summarized; omit stale or unrelated results.
+- Adding a test does not establish that it passed. If no verification evidence is available, omit the paragraph. Do not run checks merely to draft the body.
 
 ## Style rules
 
@@ -83,22 +93,24 @@ Pick exactly one — the dominant intent of that file's change:
 
 ## Worked example
 
-Input: a small TypeScript branch that replaces the hardcoded staging host in `src/api/users.ts` with the configured `API_BASE_URL`, guards access to a possibly missing `user.email` in `src/components/Profile.tsx`, and renames a local variable from `data` to `user` in `src/hooks/useUser.ts`.
+Input: the user reports that staging-bound requests and missing-email profile crashes block a customer rollout using a separate API host and imported accounts without emails. The branch replaces the hardcoded staging host in `src/api/users.ts` with the configured `API_BASE_URL`, guards access to a possibly missing `user.email` in `src/components/Profile.tsx`, and renames a local variable from `data` to `user` in `src/hooks/useUser.ts`. In this session, `pnpm test -- users.test.ts Profile.test.ts` passed on the final working diff.
 
 Output:
 
 ````
 ```markdown
 ### Description
-Use the configured API host for user requests and prevent missing-email crashes on the profile page.
+User requests always reached staging, and profiles could crash without an email address. This change uses the configured API host and handles missing emails.
 
 ### Why
-User requests currently always reach staging, and profiles can crash when an email address is missing.
+These failures block a customer rollout using a separate API host and imported accounts without emails.
 
 ### Changes
 - (fix) `src/api/users.ts` — routes user fetches through `API_BASE_URL` instead of a hardcoded staging host.
 - (fix) `src/components/Profile.tsx` — guards against `user.email` being undefined before lowercasing.
 - (refactor) `src/hooks/useUser.ts` — renames the local variable from `data` to `user` for readability inside the hook.
+
+Verification: `pnpm test -- users.test.ts Profile.test.ts` passed on the final working diff.
 ```
 ````
 

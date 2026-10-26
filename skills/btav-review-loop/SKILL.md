@@ -1,6 +1,6 @@
 ---
 name: btav-review-loop
-description: Run a bounded review-and-fix loop over a diff / branch / PR. Repeatedly launch fresh code-review passes with `btav-review`, fix concrete findings locally, and stop after two consecutive clean fresh reviews or an explicit loop stop condition.
+description: Run a bounded review-and-fix loop over a diff / branch / PR with fresh `btav-review` passes and focused verification. Fix concrete findings locally, stop after two consecutive clean reviews or a loop stop condition, and report review and verification outcomes separately.
 disable-model-invocation: true
 ---
 
@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Invoked explicitly via `/btav-review-loop` in Claude, `$btav-review-loop` in Codex, or `/skill:btav-review-loop` in Pi. Do not auto-fire on adjacent phrasings.
 
-Run a fresh reviewer. Fix what is real. Re-run the reviewer with cleared context. Prefer exiting after two consecutive clean fresh reviews, but stop earlier when an explicit loop stop condition is reached.
+Run a fresh reviewer. Fix what is real. Verify affected behavior and re-review with cleared context. Prefer exiting after two consecutive clean fresh reviews, but stop earlier when an explicit loop stop condition is reached. Review agreement and observed verification are separate results.
 
 ## What to review
 
@@ -28,6 +28,17 @@ Use the shared guide's **Review-loop anchor** section to resolve the commit ID a
 
 Do not review only the latest fix hunk. Do not switch anchors mid-loop.
 
+## Verification
+
+The parent agent runs checks. Reviewer subagents remain read-only under `btav-review`.
+
+- **Choose focused existing checks.** Read applicable repository instructions, manifests, and CI configuration for commands covering the reviewed behavior. Follow required checks; broaden beyond focused checks only when needed to cover the change.
+- **Establish a baseline when practical.** Run a relevant check or reproduction before editing to distinguish existing failures from regressions. Attribute a failure only when the evidence supports it; otherwise mark its cause unknown.
+- **Verify each behavioral fix.** Rerun affected checks before the next fresh review. Prefer reproducing the reported failure, then observing it pass. For runtime or UI behavior, use a direct reproduction when available and say what unit or mocked tests leave unverified. Add a focused regression test when it locks in the fix using the repository's existing test setup.
+- **Keep evidence current.** Record the command or reproduction, observed result, and the cumulative working diff it covered. Later edits affecting that behavior invalidate its verification. `HEAD` alone does not identify uncommitted changes; rerun affected checks before the final report.
+- **Handle failures within scope.** Confirmed regressions are actionable even if a reviewer approves. Fix them within the original goal and reset the clean-pass count after edits. Record unrelated or environmental failures without turning the loop into a repair of the whole repository.
+- **Report gaps honestly.** A failed check is `failed`; an unavailable or inconclusive check is `incomplete`. If no relevant check can run, finish the bounded reviews and report the gap. Use `not applicable` only when executable verification does not apply, such as a prose-only change, and explain why.
+
 ## Core loop
 
 Use fresh review passes. Don't trust your own prior review text as proof that the code is now correct.
@@ -42,9 +53,9 @@ Prompt shape:
 Use the `btav-review` skill at <path> to review the full cumulative local change set against the fixed commit <review-anchor>. Include the original changes, all fixes made in this loop, staged and unstaged changes, and non-ignored untracked files. Return only the review.
 ```
 
-Give the subagent the minimum necessary context. Don't leak your suspected bugs, intended fixes, or prior conclusions into the prompt.
+Give the subagent the original goal and minimum necessary context. Observed check results may be included as evidence. Don't leak your suspected bugs, intended fixes, finding ledger, or prior conclusions into the prompt. Do not edit scoped files while the reviewer is running.
 
-After you have consumed a completed reviewer result, close that reviewer subagent before starting another reviewer pass.
+After you have consumed a completed reviewer result, close or release that reviewer subagent before starting another pass when the runtime supports it.
 
 If fresh subagents are not available, stop and tell the user that `btav-review-loop` requires fresh review passes to preserve cleared-context validation.
 
@@ -79,6 +90,8 @@ that is a clean pass, including when it starts with a file summary or reports no
 
 If only `question:` items remain, stop and show them to the user instead of guessing.
 
+Keep a compact finding ledger in session notes, not a new repository file. Give each distinct defect a stable ID and track its location, disposition (`open`, `fixed`, `disagreed`, or `deferred`), supporting evidence, and fix attempts. Merge duplicate reports under that ID even when wording or line numbers change. A repeat of the same defect keeps its attempt count; a claimed fix needs current verification and fresh review. Deferred actionable findings remain unresolved.
+
 ### 3. Verify before fixing
 
 Don't blindly patch from the review text alone.
@@ -108,9 +121,9 @@ Prefer:
 
 Don't create speculative cleanups unrelated to the finding.
 
-### 5. Re-review
+### 5. Verify and re-review
 
-After fixing, launch a new fresh reviewer pass against the updated diff.
+After fixing, run affected checks and update the ledger, then launch a new fresh reviewer pass against the updated diff. Carry confirmed verification failures as open findings; a clean reviewer response does not dismiss them.
 
 Every re-review must use the same review anchor chosen at loop start. Review the full cumulative change set, not only the most recent edits.
 
@@ -120,6 +133,7 @@ Track consecutive clean passes:
 
 - initialize clean-pass count to `0` before the first review
 - actionable findings found: reset clean-pass count to `0`
+- any edits to the reviewed change set: reset clean-pass count to `0`
 - clean pass: increment clean-pass count by `1`
 - initialize total-pass count to `0` before the first review
 - every fresh reviewer output, including the initial review, increments total-pass count by `1`
@@ -141,10 +155,13 @@ Stop the loop when any of these is true:
 - only `question:` findings remain
 - the remaining findings can't be verified from the code with reasonable confidence
 - the same finding survives two fix attempts without a clear next move
+- a confirmed verification failure cannot be fixed within the task's scope or available environment
 
 When stopping due to uncertainty, show the unresolved findings and what blocked resolution.
 
 If the loop stops in degraded mode, explicitly say the review was not validated by fresh subagents.
+
+Two clean reviews establish only the review outcome. Report verified success only after two consecutive clean fresh reviews, with no unresolved actionable findings and either passing verification of the final working diff or an explanation that verification is not applicable. Reaching the pass limit without two clean reviews is not success; failed or missing verification also prevents verified success.
 
 ## Output
 
@@ -153,12 +170,15 @@ During the loop:
 - briefly summarize what the latest review found
 - briefly summarize what you fixed
 - briefly note whether the clean-pass counter is `0`, `1`, or `2`
+- note relevant check results or verification gaps when they change
 
 At the end:
 
 - summarize the fixes made
-- state whether the loop exited cleanly or with unresolved questions
-- don't print scratchpad reasoning or rejected findings
+- state the review outcome: two clean fresh passes, unresolved findings/questions, pass limit reached, or degraded review
+- state verification separately: `passed`, `failed`, `incomplete`, or `not applicable`, with commands or reproductions, observed results, and remaining gaps
+- show unresolved findings and their stable IDs when resolution is needed; keep the internal ledger and rejected findings out of the report
+- don't print scratchpad reasoning
 
 ## Safety rules
 
@@ -175,4 +195,4 @@ At the end:
 - Don't trust a single review pass as final proof.
 - Don't use stale findings after the code has changed; re-review from fresh context.
 - Don't keep looping on praise or subjective stylistic comments.
-- Don't run builds, linters, typecheckers, or tests unless the user explicitly asks.
+- Don't treat reviewer approval as proof that the behavior works or that checks passed.

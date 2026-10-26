@@ -1,7 +1,7 @@
 interface:
   display_name: "btav review loop"
-  short_description: "Review, fix, and re-review safely"
-  default_prompt: "Use $btav-review-loop to review the current diff, fix concrete findings locally, and repeat fresh review passes until two are clean or a loop stop condition is reached."
+  short_description: "Review, fix, and verify behavior with focused checks"
+  default_prompt: "Use $btav-review-loop to review the current diff, fix concrete findings locally, run relevant existing checks, and repeat fresh reviews until two are clean or a stop condition is reached, reporting review and verification outcomes separately."
 
 policy:
   allow_implicit_invocation: false
