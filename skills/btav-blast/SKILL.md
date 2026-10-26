@@ -1,6 +1,6 @@
 ---
 name: btav-blast
-description: Map what a change could break beyond the diff. Affected callers, contracts, and behaviors ranked by risk, each with an honest evidence level. Analysis only, applies nothing. Use only when explicitly invoked.
+description: Map what a change could break beyond the diff, including stale assumptions in older PRs or branches. Rank affected callers, contracts, and behaviors by risk with honest evidence levels. Analysis only. Use only when explicitly invoked.
 disable-model-invocation: true
 ---
 
@@ -23,6 +23,14 @@ Before tracing, read the PR title and description (or the user's framing if it's
 1. **Inventory the touched surfaces.** For each hunk, note anything something else could depend on: exported signatures, return shapes, error shapes, ordering or timing, config keys and defaults, env vars, CLI flags, persisted formats (schemas, cached blobs, wire formats), public endpoints. Hyrum's Law applies — consumers can depend on any observable behavior, not just the typed contract.
 2. **Trace consumers.** Grep and read for callers, importers, subclasses, templates, configs, and tests that encode the old behavior. Follow a concrete call path for `traced` risks; when the trail stops earlier, use `read` or `assumed` and state what would confirm it.
 3. **Mark the edge of view.** Consumers you can't see from this repo (other services, published packages, stored data written by old code) are findings, not omissions — list them under `Out of view`.
+
+## Older PRs and branches
+
+When assessing an older change or whether it still fits its target base, compare its original intent and touched surfaces with available target-base history since divergence. Use the actual PR base from the shared diff-selection guide. Look for replaced APIs, moved ownership, or an original problem already solved elsewhere. Age and a conflict-free diff do not establish a risk by themselves.
+
+Trace a concrete consequence, such as retries added by the PR now nesting inside retries owned by the base's transport. Report it within the existing risk format, retaining the evidence levels below. If the goal is already satisfied but no additional breakage is supported, note that under `Change surface` without inventing a risk or recommending closure.
+
+Name the inspected base ref and commit under `Change surface`, and cite the version of base code used as evidence (`<sha>:<path>:<line>`). Disclose unconfirmed freshness under `Out of view`. If the selected PR diff is available but base history is not, analyze the available diff and put that limitation under `Out of view`; do not invent intervening changes. If the diff itself needs a missing base, follow the shared guide's missing-base rule. Reading history does not authorize fetching, rebasing, pushing, or changing GitHub state.
 
 ## Evidence levels
 
@@ -102,4 +110,26 @@ Twelve call sites import `getUser`; one was traced (risk 1), the rest inferred f
 
 ## Out of view
 - The ops runbook and any CI secrets that reference `DB_TIMEOUT` aren't in this repo.
+````
+
+## Worked example — stale ownership
+
+Input: an older PR adds a three-attempt retry wrapper around `transport.request()`. The inspected base, `origin/main` at `def456`, now routes that call through a transport that already makes three attempts. Both call paths were traced; the freshness of `origin/main` has not been confirmed.
+
+Output:
+
+````
+## Change surface
+- `src/api/client.ts:22` — adds three attempts around `transport.request()`.
+- Inspected base: `origin/main` at `def456`; freshness unconfirmed.
+
+## Risks
+
+### 1. Retry ownership overlaps (risk: medium, evidence: traced)
+If the PR's wrapper is applied to the inspected base, one failing request can make nine attempts because the base's transport also retries three times.
+- `src/api/client.ts:22` — the PR retries `transport.request()` three times.
+- `def456:src/net/transport.ts:18` — the inspected base makes three attempts per call.
+
+## Out of view
+- The remote base may have advanced beyond `def456`; its current retry behavior is unverified.
 ````

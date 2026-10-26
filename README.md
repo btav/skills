@@ -22,16 +22,16 @@ flags.
 ## Skills
 
 - `btav-commit-msg` — Draft a short Conventional Commit subject
-- `btav-pr-body` — Draft a PR body
+- `btav-pr-body` — Draft a problem-first PR body with available verification evidence
 - `btav-diff` — Walk a diff hunk-by-hunk
 - `btav-review` — Summarize every changed file, then review code with clear locations, problems, and fixes
 - `btav-investigate` — Root-cause analysis with ranked hypotheses and evidence
 - `btav-unslop` — Rewrite prose to be simpler, preserve tone, and remove AI tells
 - `btav-plain` — Check a document against the four ISO 24495-1 plain language principles
-- `btav-review-loop` — Review, fix, and re-review until clean
+- `btav-review-loop` — Review, fix, and run focused checks, reporting review and verification separately
 - `btav-how` — Explain how a subsystem works, anchored to `file:line`
 - `btav-why` — Dig up why code is the way it is from git and PR history
-- `btav-blast` — Map what a change could break beyond the diff
+- `btav-blast` — Map affected callers, contracts, and stale assumptions beyond the diff
 - `btav-bro` — Restate the last message in plain language
 - `btav-mode` — Session mode that routes tasks to the matching skill above
 
