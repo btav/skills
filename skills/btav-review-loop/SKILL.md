@@ -118,6 +118,8 @@ Do not start a degraded re-review loop. If you are in degraded mode, stop after 
 
 Track consecutive clean passes:
 
+When a calling workflow supplies recovery state for an interrupted loop, retain its fixed anchor, consumed total-pass count, and finding-attempt counts rather than initializing them again. Retain clean-pass credit only when the reviewed state is confirmed unchanged. If recovery state is uncertain, stop and report the gap; do not invent remaining budget. A terminal stop is not automatically a new loop. The initial values below apply to a new attempt.
+
 - initialize clean-pass count to `0` before the first review
 - actionable findings found: reset clean-pass count to `0`
 - clean pass: increment clean-pass count by `1`

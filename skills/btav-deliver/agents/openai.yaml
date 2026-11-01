@@ -1,0 +1,7 @@
+interface:
+  display_name: "btav deliver"
+  short_description: "Implement ready specs and verify local delivery"
+  default_prompt: "Use $btav-deliver with this spec directory to implement the change, verify acceptance, run bounded review, and hand back local changes."
+
+policy:
+  allow_implicit_invocation: false
