@@ -16,6 +16,8 @@ When a task matches a row, apply the named skill instead of improvising the same
 
 | The task is to… | Apply |
 |---|---|
+| Develop product and technical specs for a change | `btav-spec` |
+| Implement and verify a change from ready specs | `btav-deliver` |
 | Review a diff, branch, or PR | `btav-review` |
 | Review and fix repeatedly until clean | `btav-review-loop` |
 | Walk through a diff hunk-by-hunk | `btav-diff` |
@@ -32,9 +34,9 @@ When a task matches a row, apply the named skill instead of improvising the same
 Routing rules:
 
 - **Route only on a clear match.** Ordinary coding, questions, and conversation proceed normally under the principles below — most turns route nowhere.
-- **One skill per task.** Don't chain skills the task didn't ask for.
+- **One top-level skill per task.** Don't chain skills the task didn't ask for. A selected workflow such as `btav-deliver` may compose the helper skills documented in its own instructions; those stages are part of the authorized task.
 - **The routed skill's own rules win** for that task, including its stop rules and its output
-  format (report-only skills print and stop) — it controls the shape and length of what gets
+  format (report-only skills print and stop; a documented helper returns control to its calling workflow) — it controls the shape and length of what gets
   printed. The `## Style rules` below are a floor, not a competitor: they govern the sentences
   inside whatever format the routed skill chose.
 - If the skills directory can't be found, do the task in the spirit of the matching skill and say the skill file wasn't available.

@@ -1,0 +1,7 @@
+interface:
+  display_name: "btav spec"
+  short_description: "Develop connected product and technical specifications"
+  default_prompt: "Use $btav-spec to develop the product spec with me first, then a grounded tech spec for this change."
+
+policy:
+  allow_implicit_invocation: false
