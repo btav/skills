@@ -41,7 +41,7 @@ All are explicit-invocation only — they don't auto-fire on adjacent phrasings,
 
 ## Specify and deliver
 
-Use `btav-spec` for one feature or fix. Settle the product behaviors, invariants, and acceptance scenarios first, then develop the architecture and code shape. Specs default to `docs/specs/<change>/product.md` and `tech.md` in the target repository, unless the project has an established convention or you supply a location.
+Use `btav-spec` to plan a feature or fix, then `btav-deliver` to build it. Specs default to `docs/specs/<change>/product.md` and `tech.md`.
 
 | Harness | Specify | Deliver or resume |
 |---|---|---|
@@ -49,11 +49,7 @@ Use `btav-spec` for one feature or fix. Settle the product behaviors, invariants
 | Codex | `$btav-spec <request>` | `$btav-deliver <spec-directory>` |
 | Pi | `/skill:btav-spec <request>` | `/skill:btav-deliver <spec-directory>` |
 
-`btav-deliver` requires ready product and tech specs, a Git checkout with a valid review base, and discoverable project checks. It implements the change, verifies acceptance and required checks, and uses `btav-review-loop` for fresh review and fixes. Fresh reviewers must be available for the normal review loop; missing capabilities or environment requirements are reported as gaps.
-
-Specs are versioned project documents. Delivery progress and evidence stay in local Git metadata, resolved with `git rev-parse --git-path btav/<change>/progress.md`. Repeating delivery inspects the current repository and saved record before resuming; stale evidence is refreshed and exhausted loops do not silently restart. The record is recovery context, not an unattended runner.
-
-Delivery finishes with local changes, separate review and verification results, and drafted PR text. You handle staging, commits, publishing, merging, and deployment. Native plan mode still controls permitted actions: specs can be drafted in conversation, but saving them and implementing code wait until writes are allowed. No skill changes harness modes automatically.
+`btav-deliver` builds from ready specs, runs checks, reviews the changes, and drafts PR text. Run it again to resume. You handle commits, publishing, merging, and deployment.
 
 ## `btav-mode`
 
