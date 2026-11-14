@@ -1,6 +1,6 @@
 # skills
 
-btav's reusable AI coding workflows.
+btav's AI coding workflows.
 
 Works on Claude (`/skill-name`), Codex (`$skill-name`), and Pi (`/skill:skill-name`).
 
@@ -39,18 +39,6 @@ flags.
 
 All are explicit-invocation only — they don't auto-fire on adjacent phrasings, `btav-mode` included.
 
-## Specify and deliver
-
-Use `btav-spec` to plan a feature or fix, then `btav-deliver` to build it. Specs default to `docs/specs/<change>/product.md` and `tech.md`.
-
-| Harness | Specify | Deliver or resume |
-|---|---|---|
-| Claude | `/btav-spec <request>` | `/btav-deliver <spec-directory>` |
-| Codex | `$btav-spec <request>` | `$btav-deliver <spec-directory>` |
-| Pi | `/skill:btav-spec <request>` | `/skill:btav-deliver <spec-directory>` |
-
-`btav-deliver` builds from ready specs, runs checks, reviews the changes, and drafts PR text. Run it again to resume. You handle commits, publishing, merging, and deployment.
-
 ## `btav-mode`
 
 Pass the task with the invocation so the mode can route it in the same turn:
@@ -60,3 +48,15 @@ Pass the task with the invocation so the mode can route it in the same turn:
 - Pi: `/skill:btav-mode <task>`
 
 For repo-wide behavior, load `btav-mode` through the repository's `AGENTS.md` or equivalent global instructions. Only rely on a bare invocation persisting across later turns when the runtime supports it.
+
+## `btav-spec` and `btav-deliver`
+
+Use `btav-spec` to plan a feature or fix, then `btav-deliver` to build it. Specs default to `docs/specs/<change>/product.md` and `tech.md`.
+
+| Harness | Specify | Deliver or resume |
+|---|---|---|
+| Claude | `/btav-spec <request>` | `/btav-deliver <spec-directory>` |
+| Codex | `$btav-spec <request>` | `$btav-deliver <spec-directory>` |
+| Pi | `/skill:btav-spec <request>` | `/skill:btav-deliver <spec-directory>` |
+
+`btav-deliver` loops and builds from ready specs, runs checks, reviews the changes, and drafts PR text. Run it again to resume. You handle commits, publishing, merging, and deployment.
